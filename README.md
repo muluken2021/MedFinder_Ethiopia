@@ -57,5 +57,5 @@ To make healthcare more accessible and efficient by allowing people in Ethiopia 
 
 ## Developer
 
-Developed by **Muluken Kassaw**  
+Muluken Kassaw 
 
