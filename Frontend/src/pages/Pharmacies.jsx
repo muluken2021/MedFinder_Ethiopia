@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useTheme } from '../context/ThemeContext'
 
 const Pharmacies = () => {
+  const { theme } = useTheme()
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -100,7 +102,7 @@ const Pharmacies = () => {
   const cities = [...new Set(mockPharmacies.map((p) => p.city))];
 
   return (
-    <div className="min-h-screen py-8 px-4" style={{ backgroundColor: '#F6F8FA' }}>
+    <div className="min-h-screen py-8 px-4" style={{ backgroundColor: theme.background }}>
       <div className="container mx-auto max-w-7xl">
         <h1 className="text-4xl font-bold mb-8 text-center" style={{ color: '#2D2D49' }}>
           Registered Pharmacies
@@ -153,8 +155,8 @@ const Pharmacies = () => {
                   <div
                     className="w-16 h-16 rounded-xl flex items-center justify-center font-bold text-2xl"
                     style={{
-                      backgroundColor: "rgba(11, 107, 107, 0.1)",
-                      color: "#0B6B6B",
+                      backgroundColor: `${theme.primary}15`,
+                      color: theme.primary,
                     }}
                   >
                     {pharmacy.name.charAt(0)}
@@ -193,14 +195,14 @@ const Pharmacies = () => {
                   <button
                     className="flex-1 py-2.5 rounded-lg font-semibold transition-colors"
                     style={{
-                      backgroundColor: "#0B6B6B",
-                      color: "white",
+                      backgroundColor: theme.primary,
+                      color: theme.text,
                     }}
                     onMouseEnter={(e) =>
-                      (e.target.style.backgroundColor = "#095555")
+                      (e.target.style.backgroundColor = theme.secondary)
                     }
                     onMouseLeave={(e) =>
-                      (e.target.style.backgroundColor = "#0B6B6B")
+                      (e.target.style.backgroundColor = theme.primary)
                     }
                   >
                     View Medicines
@@ -209,16 +211,16 @@ const Pharmacies = () => {
                   <button
                     className="flex-1 py-2.5 rounded-lg border font-semibold transition-colors"
                     style={{
-                      borderColor: "#0B6B6B",
-                      color: "#0B6B6B",
+                      borderColor: theme.primary,
+                      color: theme.primary,
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = "#0B6B6B";
-                      e.target.style.color = "white";
+                      e.target.style.backgroundColor = theme.primary;
+                      e.target.style.color = theme.text;
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.backgroundColor = "transparent";
-                      e.target.style.color = "#0B6B6B";
+                      e.target.style.color = theme.primary;
                     }}
                   >
                     View on Map

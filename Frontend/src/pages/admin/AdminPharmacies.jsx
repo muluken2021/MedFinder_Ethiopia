@@ -321,3 +321,4 @@ const AdminPharmacies = () => {
 
 export default AdminPharmacies
 
+

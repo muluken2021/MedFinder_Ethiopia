@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { medicines } from '../data/medicines'; // adjust path
+import { medicines } from '../data/medicines';
+import { useTheme } from '../context/ThemeContext'
 
 const SearchMedicine = () => {
+  const { theme } = useTheme()
   const [searchParams, setSearchParams] = useSearchParams();
   const [medicineName, setMedicineName] = useState(searchParams.get('q') || '');
   const [city, setCity] = useState('');
@@ -54,7 +56,7 @@ const SearchMedicine = () => {
   };
 
   return (
-    <div className="min-h-screen py-8 px-4" style={{ backgroundColor: '#F6F8FA' }}>
+    <div className="min-h-screen py-8 px-4" style={{ backgroundColor: theme.background }}>
       <div className="container mx-auto max-w-7xl">
         {/* Search Bar */}
         <div className="mb-8">
@@ -72,7 +74,7 @@ const SearchMedicine = () => {
               <button
                 onClick={handleSearch}
                 className="text-white font-semibold px-8 py-3 rounded-lg"
-                style={{ backgroundColor: '#0B6B6B' }}
+                style={{ backgroundColor: theme.primary }}
               >
                 Search
               </button>
@@ -153,7 +155,7 @@ const SearchMedicine = () => {
           }`}
           style={
             pharmacy.available
-              ? { backgroundColor: 'rgba(43, 182, 115, 0.1)', color: '#2BB673' }
+              ? { backgroundColor: `${theme.primary}15`, color: theme.primary }
               : { backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#EF4444' }
           }
         >
@@ -175,9 +177,9 @@ const SearchMedicine = () => {
           window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
         }}
         className="w-full py-2 px-4 rounded-lg font-semibold transition-colors text-white"
-        style={{ backgroundColor: '#0B6B6B' }}
-        onMouseEnter={(e) => (e.target.style.backgroundColor = '#095555')}
-        onMouseLeave={(e) => (e.target.style.backgroundColor = '#0B6B6B')}
+        style={{ backgroundColor: theme.primary }}
+        onMouseEnter={(e) => (e.target.style.backgroundColor = theme.secondary)}
+        onMouseLeave={(e) => (e.target.style.backgroundColor = theme.primary)}
       >
         Get Directions
       </button>
@@ -193,3 +195,4 @@ const SearchMedicine = () => {
 };
 
 export default SearchMedicine;
+

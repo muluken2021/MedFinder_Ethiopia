@@ -1,13 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 
 const Footer = () => {
+  const { theme } = useTheme()
+
   return (
     <footer className="bg-gray-800 text-white py-12 px-4 mt-auto">
       <div className="container mx-auto max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-2xl font-bold mb-4" style={{ color: '#2BB673' }}>MedFinder Ethiopia</h3>
+            <h3 className="text-2xl font-bold mb-4" style={{ color: theme.primary }}>MedFinder Ethiopia</h3>
             <p style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               Your trusted partner in finding essential medicines across Ethiopia. 
               Connecting patients with pharmacies nationwide.
@@ -22,7 +25,7 @@ const Footer = () => {
                   to="/about" 
                   className="transition-colors"
                   style={{ color: 'rgba(255, 255, 255, 0.7)' }}
-                  onMouseEnter={(e) => e.target.style.color = '#2BB673'}
+                  onMouseEnter={(e) => e.target.style.color = theme.primary}
                   onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.7)'}
                 >
                   About
@@ -33,7 +36,7 @@ const Footer = () => {
                   to="/contact" 
                   className="transition-colors"
                   style={{ color: 'rgba(255, 255, 255, 0.7)' }}
-                  onMouseEnter={(e) => e.target.style.color = '#2BB673'}
+                  onMouseEnter={(e) => e.target.style.color = theme.primary}
                   onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.7)'}
                 >
                   Contact
@@ -50,7 +53,7 @@ const Footer = () => {
                   href="#privacy" 
                   className="transition-colors"
                   style={{ color: 'rgba(255, 255, 255, 0.7)' }}
-                  onMouseEnter={(e) => e.target.style.color = '#2BB673'}
+                  onMouseEnter={(e) => e.target.style.color = theme.primary}
                   onMouseLeave={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.7)'}
                 >
                   Privacy Policy
@@ -69,4 +72,5 @@ const Footer = () => {
 }
 
 export default Footer
+
 

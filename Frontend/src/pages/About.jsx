@@ -1,6 +1,8 @@
 import React from "react";
+import { useTheme } from '../context/ThemeContext'
 
 const About = () => {
+  const { theme } = useTheme()
   const steps = [
     {
       number: 1,
@@ -80,12 +82,12 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen py-16 px-4 md:px-8 bg-gradient-to-b from-white to-[#F6F8FA]">
+    <div className="min-h-screen py-16 px-4 md:px-8 bg-gradient-to-b from-white" style={{ backgroundColor: theme.background }}>
       <div className="max-w-6xl mx-auto">
         {/* Mission */}
         <section className="text-center mb-20">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#2D2D49]">
-            About <span className="text-[#0B6B6B]">MedFinder Ethiopia</span>
+            About <span style={{ color: theme.primary }}>MedFinder Ethiopia</span>
           </h1>
           <p className="text-lg md:text-xl mb-6 text-gray-700 max-w-3xl mx-auto">
             We connect patients and pharmacies—making access to medicines easier,
@@ -110,10 +112,10 @@ const About = () => {
                 key={step.number}
                 className="bg-white p-8 rounded-2xl shadow-md hover:shadow-lg transition-all text-center"
               >
-                <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-[#E5F4F4] text-[#0B6B6B]">
+                <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full" style={{ backgroundColor: `${theme.primary}15`, color: theme.primary }}>
                   {step.icon}
                 </div>
-                <div className="text-4xl font-bold text-[#0B6B6B] mb-2">
+                <div className="text-4xl font-bold mb-2" style={{ color: theme.primary }}>
                   {step.number}
                 </div>
                 <h3 className="text-xl font-semibold text-[#2D2D49] mb-2">
@@ -157,9 +159,10 @@ const About = () => {
                 key={i}
                 className="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition-shadow"
               >
-                <div className="w-24 h-24 rounded-full bg-[#E5F4F4] mx-auto mb-4 flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: `${theme.primary}15` }}>
                   <svg
-                    className="w-12 h-12 text-[#0B6B6B]"
+                    className="w-12 h-12"
+                    style={{ color: theme.primary }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -183,9 +186,10 @@ const About = () => {
 
         {/* Ethiopia Focus */}
         <section className="bg-white rounded-2xl shadow-md p-10 text-center">
-          <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full bg-[#E5F4F4]">
+          <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full" style={{ backgroundColor: `${theme.primary}15` }}>
             <svg
-              className="w-10 h-10 text-[#2BB673]"
+              className="w-10 h-10"
+              style={{ color: theme.primary }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -213,3 +217,4 @@ const About = () => {
 };
 
 export default About;
+

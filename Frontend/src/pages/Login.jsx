@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 
 const Login = () => {
+  const { theme } = useTheme()
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: '',
@@ -66,12 +68,12 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4" style={{ backgroundColor: '#F6F8FA' }}>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4" style={{ backgroundColor: theme.background }}>
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-4">
-            <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0B6B6B' }}>
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: theme.primary }}>
               <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -102,7 +104,7 @@ const Login = () => {
                   }`}
                   style={
                     formData.userType === 'user'
-                      ? { backgroundColor: '#0B6B6B' }
+                      ? { backgroundColor: theme.primary }
                       : {
                           borderColor: '#E5E7EB',
                           color: '#1A1A1A',
@@ -111,8 +113,8 @@ const Login = () => {
                   }
                   onMouseEnter={(e) => {
                     if (formData.userType !== 'user') {
-                      e.target.style.borderColor = '#0B6B6B'
-                      e.target.style.color = '#0B6B6B'
+                      e.target.style.borderColor = theme.primary
+                      e.target.style.color = theme.primary
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -209,10 +211,10 @@ const Login = () => {
                   color: '#1A1A1A',
                   borderColor: errors.email ? '#EF4444' : '#E5E7EB'
                 }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#0B6B6B'
-                  if (errors.email) setErrors({ ...errors, email: '' })
-                }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = theme.primary
+                    if (errors.email) setErrors({ ...errors, email: '' })
+                  }}
                 onBlur={(e) => {
                   e.target.style.borderColor = errors.email ? '#EF4444' : '#E5E7EB'
                 }}
@@ -256,7 +258,7 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1"
                   style={{ color: '#1A1A1A' }}
-                  onMouseEnter={(e) => e.target.style.color = '#0B6B6B'}
+                  onMouseEnter={(e) => e.target.style.color = theme.primary}
                   onMouseLeave={(e) => e.target.style.color = '#1A1A1A'}
                 >
                   {showPassword ? (
@@ -282,16 +284,16 @@ const Login = () => {
                 <input
                   type="checkbox"
                   className="w-4 h-4 rounded"
-                  style={{ accentColor: '#0B6B6B' }}
+                  style={{ accentColor: theme.primary }}
                 />
                 <span className="ml-2 text-sm" style={{ color: '#1A1A1A' }}>Remember me</span>
               </label>
               <Link
                 to="/forgot-password"
                 className="text-sm font-medium transition-colors"
-                style={{ color: '#0B6B6B' }}
-                onMouseEnter={(e) => e.target.style.color = '#095555'}
-                onMouseLeave={(e) => e.target.style.color = '#0B6B6B'}
+                style={{ color: theme.primary }}
+                onMouseEnter={(e) => e.target.style.color = theme.secondary}
+                onMouseLeave={(e) => e.target.style.color = theme.primary}
               >
                 Forgot password?
               </Link>
@@ -302,11 +304,11 @@ const Login = () => {
               type="submit"
               className="w-full py-3 px-6 rounded-lg font-semibold text-lg transition-colors"
               style={{ 
-                backgroundColor: '#0B6B6B',
-                color: 'white'
+                backgroundColor: theme.primary,
+                color: theme.text
               }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
+              onMouseEnter={(e) => e.target.style.backgroundColor = theme.secondary}
+              onMouseLeave={(e) => e.target.style.backgroundColor = theme.primary}
             >
               Sign In
             </button>
@@ -328,9 +330,9 @@ const Login = () => {
               <Link
                 to="/register-pharmacy"
                 className="font-semibold transition-colors"
-                style={{ color: '#0B6B6B' }}
-                onMouseEnter={(e) => e.target.style.color = '#095555'}
-                onMouseLeave={(e) => e.target.style.color = '#0B6B6B'}
+                style={{ color: theme.primary }}
+                onMouseEnter={(e) => e.target.style.color = theme.secondary}
+                onMouseLeave={(e) => e.target.style.color = theme.primary}
               >
                 Register Your Pharmacy
               </Link>
@@ -338,9 +340,9 @@ const Login = () => {
               <Link
                 to="/register"
                 className="font-semibold transition-colors"
-                style={{ color: '#0B6B6B' }}
-                onMouseEnter={(e) => e.target.style.color = '#095555'}
-                onMouseLeave={(e) => e.target.style.color = '#0B6B6B'}
+                style={{ color: theme.primary }}
+                onMouseEnter={(e) => e.target.style.color = theme.secondary}
+                onMouseLeave={(e) => e.target.style.color = theme.primary}
               >
                 Create Account
               </Link>
@@ -369,4 +371,5 @@ const Login = () => {
 }
 
 export default Login
+
 

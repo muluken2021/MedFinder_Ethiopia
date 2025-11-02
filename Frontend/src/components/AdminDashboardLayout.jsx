@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
 
 const AdminDashboardLayout = ({ children }) => {
+  const { theme } = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -38,9 +40,9 @@ const AdminDashboardLayout = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F6F8FA' }}>
+    <div className="min-h-screen" style={{ backgroundColor: theme.background }}>
       {/* Sidebar */}
-      <div className={`fixed left-0 top-0 h-full transition-all duration-300 z-30 ${sidebarOpen ? 'w-64' : 'w-20'}`} style={{ backgroundColor: '#0B6B6B' }}>
+      <div className={`fixed left-0 top-0 h-full transition-all duration-300 z-30 ${sidebarOpen ? 'w-64' : 'w-20'}`} style={{ backgroundColor: theme.primary }}>
         <div className="flex flex-col h-full">
           {/* Logo Section */}
           <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
@@ -129,7 +131,7 @@ const AdminDashboardLayout = ({ children }) => {
                       color: '#1A1A1A',
                       borderColor: '#E5E7EB'
                     }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
+                    onFocus={(e) => e.target.style.borderColor = theme.primary}
                     onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
                   />
                   <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2" style={{ color: '#1A1A1A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +157,7 @@ const AdminDashboardLayout = ({ children }) => {
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                   className="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#0B6B6B', color: 'white', fontWeight: 'bold' }}>
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: theme.primary, color: theme.text, fontWeight: 'bold' }}>
                     A
                   </div>
                   <div className="text-left hidden md:block">
@@ -227,11 +229,11 @@ const AdminDashboardLayout = ({ children }) => {
                 onClick={handleLogout}
                 className="flex-1 py-2 px-4 rounded-lg font-semibold transition-colors"
                 style={{ 
-                  backgroundColor: '#0B6B6B',
-                  color: 'white'
+                  backgroundColor: theme.primary,
+                  color: theme.text
                 }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
+                onMouseEnter={(e) => e.target.style.backgroundColor = theme.secondary}
+                onMouseLeave={(e) => e.target.style.backgroundColor = theme.primary}
               >
                 Yes
               </button>
@@ -265,4 +267,5 @@ const AdminDashboardLayout = ({ children }) => {
 }
 
 export default AdminDashboardLayout
+
 

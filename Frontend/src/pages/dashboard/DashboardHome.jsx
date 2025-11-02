@@ -1,6 +1,8 @@
 import React from 'react'
+import { useTheme } from '../../context/ThemeContext'
 
 const DashboardHome = () => {
+  const { theme } = useTheme()
   // Mock data
   const pharmacyName = 'Central Pharmacy'
   const stats = {
@@ -18,15 +20,15 @@ const DashboardHome = () => {
       title: 'Total Medicines',
       value: stats.totalMedicines,
       icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-      color: '#0B6B6B',
-      bgColor: 'rgba(11, 107, 107, 0.1)'
+      color: theme.primary,
+      bgColor: `${theme.primary}15`
     },
     {
       title: 'In Stock',
       value: stats.inStock,
       icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
-      color: '#2BB673',
-      bgColor: 'rgba(43, 182, 115, 0.1)'
+      color: theme.primary,
+      bgColor: `${theme.primary}15`
     },
     {
       title: 'Out of Stock',
@@ -82,14 +84,14 @@ const DashboardHome = () => {
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-sm font-medium" style={{ color: '#1A1A1A' }}>In Stock</span>
-                <span className="text-sm font-bold" style={{ color: '#2BB673' }}>{stats.inStock} ({inStockPercentage}%)</span>
+                <span className="text-sm font-bold" style={{ color: theme.primary }}>{stats.inStock} ({inStockPercentage}%)</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-4">
                 <div
                   className="h-4 rounded-full transition-all duration-500"
                   style={{ 
                     width: `${inStockPercentage}%`,
-                    backgroundColor: '#2BB673'
+                    backgroundColor: theme.primary
                   }}
                 ></div>
               </div>
@@ -135,7 +137,7 @@ const DashboardHome = () => {
                   cy="96"
                   r="80"
                   fill="none"
-                  stroke="#2BB673"
+                  stroke={theme.primary}
                   strokeWidth="32"
                   strokeDasharray={`${2 * Math.PI * 80 * (inStockPercentage / 100)} ${2 * Math.PI * 80}`}
                   strokeLinecap="round"
@@ -163,7 +165,7 @@ const DashboardHome = () => {
           </div>
           <div className="flex justify-center gap-6 mt-6">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#2BB673' }}></div>
+              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: theme.primary }}></div>
               <span className="text-sm" style={{ color: '#1A1A1A' }}>In Stock ({inStockPercentage}%)</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -178,4 +180,5 @@ const DashboardHome = () => {
 }
 
 export default DashboardHome
+
 

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useTheme } from '../context/ThemeContext'
 
 const FAQSection = () => {
+  const { theme } = useTheme()
   const [activeIndex, setActiveIndex] = useState(null);
 
   const faqs = [
@@ -57,7 +59,7 @@ const FAQSection = () => {
               >
                 <h3
                   className="text-lg font-semibold"
-                  style={{ color: "#0B6B6B" }}
+                  style={{ color: theme.primary }}
                 >
                   {faq.question}
                 </h3>
@@ -65,7 +67,7 @@ const FAQSection = () => {
                   className={`text-2xl transition-transform duration-300 ${
                     activeIndex === index ? "rotate-45" : "rotate-0"
                   }`}
-                  style={{ color: "#0B6B6B" }}
+                  style={{ color: theme.primary }}
                 >
                   +
                 </span>
