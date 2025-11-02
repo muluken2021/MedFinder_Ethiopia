@@ -1,0 +1,36 @@
+// medicines.js
+export const medicines = [
+  {
+    id: 1,
+    name: "Paracetamol",
+    pharmacyName: "Central Pharmacy",
+    address: "Bole Road, Addis Ababa",
+    city: "addis-ababa",
+    price: 250,
+    available: true,
+    lat: 9.0054,
+    lng: 38.7636,
+  },
+  {
+    id: 2,
+    name: "Amoxicillin",
+    pharmacyName: "MedCare Pharmacy",
+    address: "Meskel Square, Addis Ababa",
+    city: "addis-ababa",
+    price: 280,
+    available: true,
+    lat: 9.0121,
+    lng: 38.7505,
+  },
+  {
+    id: 3,
+    name: "Vitamin C",
+    pharmacyName: "Health Plus Pharmacy",
+    address: "Piazza, Addis Ababa",
+    city: "addis-ababa",
+    price: 230,
+    available: false,
+    lat: 9.024,
+    lng: 38.7489,
+  },
+];

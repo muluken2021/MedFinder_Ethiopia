@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import LocationPicker from '../components/LocationPicker'
 
 const RegisterPharmacy = () => {
   const navigate = useNavigate()
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [mapChecked, setMapChecked] = useState(false);
+
   const [formData, setFormData] = useState({
     pharmacyName: '',
     ownerName: '',
@@ -299,6 +302,7 @@ const RegisterPharmacy = () => {
                   >
                     <option value="">Select City</option>
                     <option value="addis-ababa">Addis Ababa</option>
+                     <option value="Debre-Birhan">Debre Birhan</option>
                     <option value="dire-dawa">Dire Dawa</option>
                     <option value="bahir-dar">Bahir Dar</option>
                     <option value="mekelle">Mekelle</option>
@@ -310,32 +314,68 @@ const RegisterPharmacy = () => {
                   </select>
                 </div>
 
-                {/* Detailed Address */}
-                <div>
-                  <label htmlFor="address" className="block mb-2 font-semibold flex items-center" style={{ color: '#2D2D49' }}>
-                    <svg className="w-5 h-5 mr-2" style={{ color: '#0B6B6B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Detailed Address
-                  </label>
-                  <textarea
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    required
-                    rows="4"
-                    className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors resize-none"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                    placeholder="Enter your complete pharmacy address"
-                  ></textarea>
-                </div>
+          {/* Pharmacy Location Verification */}
+<div>
+  <label className="block mb-2 font-semibold flex items-center" style={{ color: '#2D2D49' }}>
+    <svg className="w-5 h-5 mr-2" style={{ color: '#0B6B6B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+    Verify Your Pharmacy Location
+  </label>
+
+  <div className="flex flex-col gap-3">
+    {/* Pharmacy Name */}
+    <input
+      type="text"
+      name="pharmacyName"
+      value={formData.pharmacyName}
+      onChange={handleChange}
+      placeholder="Enter Pharmacy Name"
+      className="w-full px-4 py-3 rounded-lg border-2 outline-none"
+      style={{ borderColor: '#E5E7EB', color: '#1A1A1A' }}
+      required
+    />
+
+   
+    
+    {/* Check Map Button */}
+    <button
+      type="button"
+      onClick={() => {
+        if (!formData.pharmacyName || !formData.city) {
+          alert("Please enter Pharmacy Name and select City first!");
+          return;
+        }
+        const query = encodeURIComponent(`${formData.pharmacyName} ${formData.city}`);
+        window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+      }}
+      className="px-4 py-3 rounded-lg font-semibold text-white"
+      style={{ backgroundColor: '#0B6B6B' }}
+      onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
+      onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
+    >
+      Check on Map
+    </button>
+
+    {/* Checkbox */}
+    <div className="flex items-center gap-2 mt-2">
+      <input
+        type="checkbox"
+        checked={mapChecked}
+        onChange={(e) => setMapChecked(e.target.checked)}
+        required
+        className="w-5 h-5"
+        style={{ accentColor: '#0B6B6B' }}
+      />
+      <label style={{ color: '#1A1A1A' }}>
+        I have checked my pharmacy location on Google Maps
+      </label>
+    </div>
+  </div>
+</div>
+
+
 
                 {/* License Number */}
                 <div>
@@ -437,9 +477,27 @@ const RegisterPharmacy = () => {
                     style={{ accentColor: '#0B6B6B' }}
                   />
                   <label htmlFor="agreeToTerms" className="flex-1" style={{ color: '#1A1A1A' }}>
-                    ✅ I agree to the <a href="#terms" className="underline" style={{ color: '#0B6B6B' }}>Terms & Conditions</a> and confirm my pharmacy is licensed.
+                    I agree to the <a href="#terms" className="underline" style={{ color: '#0B6B6B' }}>Terms & Conditions</a> and confirm my pharmacy is licensed.
                   </label>
                 </div>
+
+                {/* Pharmacy Location */}
+                  <div>
+                    <label className="block mb-2 font-semibold flex items-center" style={{ color: '#2D2D49' }}>
+                      <svg className="w-5 h-5 mr-2" style={{ color: '#0B6B6B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Select Your Pharmacy Location on Map
+                    </label>
+                    <LocationPicker onLocationSelect={(location) => setFormData({ ...formData, lat: location.lat, lng: location.lng })} />
+
+                    {formData.lat && formData.lng && (
+                      <p className="text-sm mt-2" style={{ color: '#2BB673' }}>
+                        Selected Location: Lat {formData.lat.toFixed(5)}, Lng {formData.lng.toFixed(5)}
+                      </p>
+                    )}
+                  </div>
 
                 {/* Submit Button */}
                 <button
