@@ -21,7 +21,8 @@ const RegisterPharmacy = () => {
     licenseNumber: '',
     licenseDocument: null,
     pharmacyImage: null,
-    agreeToTerms: false
+    agreeToTerms: false,
+    mapVerified : false,
   })
 
   const handleChange = (e) => {
@@ -63,7 +64,7 @@ const RegisterPharmacy = () => {
               </svg>
             </div>
             <h2 className="text-3xl font-bold mb-4" style={{ color: '#2D2D49' }}>
-              🎉 Your pharmacy registration has been submitted for review.
+              Your pharmacy registration has been submitted for review.
             </h2>
             <p className="text-lg mb-8" style={{ color: '#1A1A1A' }}>
               You'll receive an email once approved.
@@ -364,8 +365,9 @@ const RegisterPharmacy = () => {
     <div className="flex items-center gap-2 mt-2">
       <input
         type="checkbox"
-        checked={mapChecked}
-        onChange={(e) => setMapChecked(e.target.checked)}
+        name="mapVerified"
+        checked={formData.mapVerified}
+        onChange={handleChange}
         required
         className="w-5 h-5"
         style={{ accentColor: theme.primary }}

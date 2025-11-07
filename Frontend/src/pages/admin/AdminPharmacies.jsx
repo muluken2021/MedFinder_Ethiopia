@@ -59,7 +59,7 @@ const AdminPharmacies = () => {
         <p style={{ color: '#1A1A1A' }}>Manage and approve pharmacy registrations</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Main Table Section */}
         <div className="lg:col-span-2">
           {/* Search and Filter */}

@@ -24,6 +24,9 @@ import AdminApprovals from './pages/admin/AdminApprovals'
 import AdminReports from './pages/admin/AdminReports'
 import AdminSettings from './pages/admin/AdminSettings'
 
+
+import PrivateRoute from './components/PrivateRoute';
+
 const AppContent = () => {
   const { theme } = useTheme()
 
@@ -48,64 +51,88 @@ const AppContent = () => {
         </div>
       } />
         
-      {/* Dashboard Routes with Dashboard Layout */}
-      <Route path="/dashboard" element={
-        <DashboardLayout>
-          <DashboardHome />
-        </DashboardLayout>
-      } />
-      <Route path="/dashboard/medicines" element={
-        <DashboardLayout>
-          <Medicines />
-        </DashboardLayout>
-      } />
-      <Route path="/dashboard/add-medicine" element={
-        <DashboardLayout>
-          <AddMedicine />
-        </DashboardLayout>
-      } />
-      <Route path="/dashboard/profile" element={
-        <DashboardLayout>
-          <Profile />
-        </DashboardLayout>
-      } />
-      
-      {/* Admin Dashboard Routes */}
-      <Route path="/admin" element={
-        <AdminDashboardLayout>
-          <DashboardOverview />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/pharmacies" element={
-        <AdminDashboardLayout>
-          <AdminPharmacies />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/medicines" element={
-        <AdminDashboardLayout>
-          <AdminMedicines />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/users" element={
-        <AdminDashboardLayout>
-          <AdminUsers />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/approvals" element={
-        <AdminDashboardLayout>
-          <AdminApprovals />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/reports" element={
-        <AdminDashboardLayout>
-          <AdminReports />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/settings" element={
-        <AdminDashboardLayout>
-          <AdminSettings />
-        </AdminDashboardLayout>
-      } />
+        
+          {/* // Pharmacy Dashboard Routes */}
+          <Route path="/dashboard" element={
+            <PrivateRoute role="pharmacy">
+              <DashboardLayout>
+                <DashboardHome />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard/medicines" element={
+            <PrivateRoute role="pharmacy">
+              <DashboardLayout>
+                <Medicines />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard/add-medicine" element={
+            <PrivateRoute role="pharmacy">
+              <DashboardLayout>
+                <AddMedicine />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard/profile" element={
+            <PrivateRoute role="pharmacy">
+              <DashboardLayout>
+                <Profile />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+
+          {/* // Admin Dashboard Routes */}
+          <Route path="/admin" element={
+            <PrivateRoute role="admin">
+              <AdminDashboardLayout>
+                <DashboardOverview />
+              </AdminDashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/admin/pharmacies" element={
+            <PrivateRoute role="admin">
+              <AdminDashboardLayout>
+                <AdminPharmacies />
+              </AdminDashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/admin/medicines" element={
+            <PrivateRoute role="admin">
+              <AdminDashboardLayout>
+                <AdminMedicines />
+              </AdminDashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/admin/users" element={
+            <PrivateRoute role="admin">
+              <AdminDashboardLayout>
+                <AdminUsers />
+              </AdminDashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/admin/approvals" element={
+            <PrivateRoute role="admin">
+              <AdminDashboardLayout>
+                <AdminApprovals />
+              </AdminDashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/admin/reports" element={
+            <PrivateRoute role="admin">
+              <AdminDashboardLayout>
+                <AdminReports />
+              </AdminDashboardLayout>
+            </PrivateRoute>
+          } />
+          <Route path="/admin/settings" element={
+            <PrivateRoute role="admin">
+              <AdminDashboardLayout>
+                <AdminSettings />
+              </AdminDashboardLayout>
+            </PrivateRoute>
+          } />
+
     </Routes>
   )
 }
