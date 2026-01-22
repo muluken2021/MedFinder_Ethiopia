@@ -15,15 +15,15 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="sticky top-0 z-50 shadow-md" style={{ backgroundColor: theme.background }}>
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <nav className="sticky top-0 z-50 " style={{ backgroundColor: theme.background }}>
+      <div className="container mx-auto max-w-9xl px-4 sm:px-6 lg:px-15">
         <div className="flex items-center justify-between h-16">
           
           {/* 🔹 Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <img src="./medlogo.png" className="w-8 h-8" />
-            <span className="text-xl font-bold" style={{ color: theme.primary }}>
-              MedFinder Ethiopia
+            {/* <img src="./medlogo.png" className="w-8 h-8" /> */}
+            <span className="text-2xl font-bold" style={{ color: theme.primary }}>
+              <span className='text-black'>Ethio</span> -MedFinder 
             </span>
           </Link>
 

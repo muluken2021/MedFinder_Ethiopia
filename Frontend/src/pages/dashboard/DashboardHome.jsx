@@ -1,184 +1,165 @@
-import React from 'react'
-import { useTheme } from '../../context/ThemeContext'
+import React, { useEffect, useState } from "react";
+import { useTheme } from "../../context/ThemeContext";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 const DashboardHome = () => {
-  const { theme } = useTheme()
-  // Mock data
-  const pharmacyName = 'Central Pharmacy'
-  const stats = {
-    totalMedicines: 156,
-    inStock: 132,
-    outOfStock: 24,
-    pendingApprovals: 3
-  }
+  const { theme } = useTheme();
 
-  const inStockPercentage = Math.round((stats.inStock / stats.totalMedicines) * 100)
-  const outOfStockPercentage = Math.round((stats.outOfStock / stats.totalMedicines) * 100)
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // =============================
+  // 🔥 FETCH REAL DATA FROM BACKEND
+  // =============================
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/pharmacy/stats"); 
+        const data = await res.json();
+        setStats(data);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error fetching dashboard data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p className="text-center mt-10 font-bold">Loading...</p>;
+  if (!stats) return <p className="text-center mt-10 text-red-500 font-bold">Failed to load dashboard data</p>;
+
+  const inStockPercentage = Math.round((stats.inStock / stats.totalMedicines) * 100);
+  const outOfStockPercentage = Math.round((stats.outOfStock / stats.totalMedicines) * 100);
+
+  // =============================
+  // 📊 Recharts Data Formatting
+  // =============================
+  const barData = [
+    { name: "In Stock", value: stats.inStock },
+    { name: "Out of Stock", value: stats.outOfStock },
+    { name: "Pending", value: stats.pendingApprovals },
+  ];
+
+  const pieData = [
+    { name: "In Stock", value: stats.inStock },
+    { name: "Out of Stock", value: stats.outOfStock },
+  ];
+
+  const COLORS = [theme.primary, "#EF4444"];
 
   const summaryCards = [
     {
-      title: 'Total Medicines',
+      title: "Total Medicines",
       value: stats.totalMedicines,
-      icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
       color: theme.primary,
-      bgColor: `${theme.primary}15`
     },
     {
-      title: 'In Stock',
+      title: "In Stock",
       value: stats.inStock,
-      icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
       color: theme.primary,
-      bgColor: `${theme.primary}15`
     },
     {
-      title: 'Out of Stock',
+      title: "Out of Stock",
       value: stats.outOfStock,
-      icon: 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z',
-      color: '#EF4444',
-      bgColor: 'rgba(239, 68, 68, 0.1)'
+      color: "#EF4444",
     },
     {
-      title: 'Pending Approvals',
+      title: "Pending Approvals",
       value: stats.pendingApprovals,
-      icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
-      color: '#F59E0B',
-      bgColor: 'rgba(245, 158, 11, 0.1)'
-    }
-  ]
+      color: "#F59E0B",
+    },
+  ];
 
   return (
     <div>
-      {/* Welcome Section */}
+      {/* Welcome */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2" style={{ color: '#2D2D49' }}>
-          Welcome back, {pharmacyName}!
+        <h1 className="text-3xl font-bold" style={{ color: "#2D2D49" }}>
+          Welcome back, {stats.pharmacyName}!
         </h1>
-        <p style={{ color: '#1A1A1A' }}>Here's an overview of your pharmacy dashboard.</p>
+        <p className="text-gray-600">Here’s your updated analytics overview.</p>
       </div>
 
-      {/* Summary Cards */}
+      {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {summaryCards.map((card, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: card.bgColor }}>
-                <svg className="w-6 h-6" style={{ color: card.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={card.icon} />
-                </svg>
-              </div>
-            </div>
-            <h3 className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>{card.title}</h3>
-            <p className="text-3xl font-bold" style={{ color: '#2D2D49' }}>{card.value}</p>
+        {summaryCards.map((card, i) => (
+          <div
+            key={i}
+            className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-all"
+          >
+            <h3 className="text-sm text-gray-500">{card.title}</h3>
+            <p className="text-3xl font-bold mt-2" style={{ color: card.color }}>
+              {card.value}
+            </p>
           </div>
         ))}
       </div>
 
-      {/* Charts Section */}
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Bar Chart */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#2D2D49' }}>
+
+        {/* 🟦 BAR CHART */}
+        <div className="bg-white rounded-xl shadow p-6">
+          <h2 className="text-xl font-bold mb-4" style={{ color: "#2D2D49" }}>
             Stock Summary
           </h2>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium" style={{ color: '#1A1A1A' }}>In Stock</span>
-                <span className="text-sm font-bold" style={{ color: theme.primary }}>{stats.inStock} ({inStockPercentage}%)</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-4">
-                <div
-                  className="h-4 rounded-full transition-all duration-500"
-                  style={{ 
-                    width: `${inStockPercentage}%`,
-                    backgroundColor: theme.primary
-                  }}
-                ></div>
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium" style={{ color: '#1A1A1A' }}>Out of Stock</span>
-                <span className="text-sm font-bold" style={{ color: '#EF4444' }}>{stats.outOfStock} ({outOfStockPercentage}%)</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-4">
-                <div
-                  className="h-4 rounded-full transition-all duration-500"
-                  style={{ 
-                    width: `${outOfStockPercentage}%`,
-                    backgroundColor: '#EF4444'
-                  }}
-                ></div>
-              </div>
-            </div>
+          <div className="w-full h-64">
+            <ResponsiveContainer>
+              <BarChart data={barData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill={theme.primary} radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Pie Chart Representation */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#2D2D49' }}>
+        {/* 🟠 PIE CHART */}
+        <div className="bg-white rounded-xl shadow p-6">
+          <h2 className="text-xl font-bold mb-4" style={{ color: "#2D2D49" }}>
             Stock Distribution
           </h2>
-          <div className="flex items-center justify-center">
-            <div className="relative w-48 h-48">
-              <svg className="transform -rotate-90 w-48 h-48">
-                {/* Background circle */}
-                <circle
-                  cx="96"
-                  cy="96"
-                  r="80"
-                  fill="none"
-                  stroke="#E5E7EB"
-                  strokeWidth="32"
-                />
-                {/* In Stock arc */}
-                <circle
-                  cx="96"
-                  cy="96"
-                  r="80"
-                  fill="none"
-                  stroke={theme.primary}
-                  strokeWidth="32"
-                  strokeDasharray={`${2 * Math.PI * 80 * (inStockPercentage / 100)} ${2 * Math.PI * 80}`}
-                  strokeLinecap="round"
-                />
-                {/* Out of Stock arc */}
-                <circle
-                  cx="96"
-                  cy="96"
-                  r="80"
-                  fill="none"
-                  stroke="#EF4444"
-                  strokeWidth="32"
-                  strokeDasharray={`${2 * Math.PI * 80 * (outOfStockPercentage / 100)} ${2 * Math.PI * 80}`}
-                  strokeDashoffset={`-${2 * Math.PI * 80 * (inStockPercentage / 100)}`}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-3xl font-bold" style={{ color: '#2D2D49' }}>{stats.totalMedicines}</p>
-                  <p className="text-sm" style={{ color: '#1A1A1A' }}>Total</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center gap-6 mt-6">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: theme.primary }}></div>
-              <span className="text-sm" style={{ color: '#1A1A1A' }}>In Stock ({inStockPercentage}%)</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#EF4444' }}></div>
-              <span className="text-sm" style={{ color: '#1A1A1A' }}>Out of Stock ({outOfStockPercentage}%)</span>
-            </div>
+
+          <div className="w-full h-64 flex items-center justify-center">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={90}
+                  label
+                >
+                  {pieData.map((entry, idx) => (
+                    <Cell key={idx} fill={COLORS[idx]} />
+                  ))}
+                </Pie>
+                <Legend />
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
+
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DashboardHome
-
-
+export default DashboardHome;

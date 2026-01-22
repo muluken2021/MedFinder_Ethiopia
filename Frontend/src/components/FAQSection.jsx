@@ -58,8 +58,8 @@ const FAQSection = () => {
                 className="w-full text-left px-6 py-4 flex justify-between items-center focus:outline-none"
               >
                 <h3
-                  className="text-lg font-semibold"
-                  style={{ color: theme.primary }}
+                  className="text-gray-700 text-lg font-semibold"
+                  
                 >
                   {faq.question}
                 </h3>

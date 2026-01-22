@@ -1,85 +1,34 @@
-import React, { useState } from 'react'
-import { useTheme } from '../context/ThemeContext'
+import React, { useState, useEffect } from 'react';
+import { useTheme } from '../context/ThemeContext';
+import { LocateIcon, Mail, MapPin, PhoneCall, Search } from 'lucide-react';
 
 const Pharmacies = () => {
-  const { theme } = useTheme()
+  const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [pharmacies, setPharmacies] = useState([]); // <-- use this for real data
   const pharmaciesPerPage = 6;
 
-  // Mock pharmacy data
-  const mockPharmacies = [
-    {
-      id: 1,
-      name: 'Central Pharmacy',
-      address: 'Bole Road, Addis Ababa, Ethiopia',
-      phone: '+251 11 123 4567',
-      email: 'info@centralpharmacy.et',
-      city: 'Addis Ababa',
-      logo: null
-    },
-    {
-      id: 2,
-      name: 'MedCare Pharmacy',
-      address: 'Meskel Square, Addis Ababa, Ethiopia',
-      phone: '+251 11 234 5678',
-      email: 'contact@medcare.et',
-      city: 'Addis Ababa',
-      logo: null
-    },
-    {
-      id: 3,
-      name: 'Health Plus Pharmacy',
-      address: 'Piazza, Addis Ababa, Ethiopia',
-      phone: '+251 11 345 6789',
-      email: 'info@healthplus.et',
-      city: 'Addis Ababa',
-      logo: null
-    },
-    {
-      id: 4,
-      name: 'City Pharmacy',
-      address: 'CMC Road, Addis Ababa, Ethiopia',
-      phone: '+251 11 456 7890',
-      email: 'contact@citypharmacy.et',
-      city: 'Addis Ababa',
-      logo: null
-    },
-    {
-      id: 5,
-      name: 'Dire Dawa Medical Center',
-      address: 'Main Street, Dire Dawa, Ethiopia',
-      phone: '+251 25 111 2222',
-      email: 'info@ddmc.et',
-      city: 'Dire Dawa',
-      logo: null
-    },
-    {
-      id: 6,
-      name: 'Bahir Dar Pharmacy',
-      address: 'Lake Tana Road, Bahir Dar, Ethiopia',
-      phone: '+251 58 222 3333',
-      email: 'info@bahirdarpharmacy.et',
-      city: 'Bahir Dar',
-      logo: null
-    },
-    {
-      id: 7,
-      name: 'Bahir Dar Pharmacy',
-      address: 'Lake Tana Road, Bahir Dar, Ethiopia',
-      phone: '+251 58 222 3333',
-      email: 'info@bahirdarpharmacy.et',
-      city: 'Bahir Dar',
-      logo: null
-    },
-  ]
+  // Fetch pharmacies from backend API
+  useEffect(() => {
+    const fetchPharmacies = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/pharmacies'); // <-- your backend route
+        const data = await response.json();
+        setPharmacies(data);
+      } catch (error) {
+        console.error('Error fetching pharmacies:', error);
+      }
+    };
+    fetchPharmacies();
+  }, []);
 
-    // Filter logic
-  const filteredPharmacies = mockPharmacies.filter((pharmacy) => {
+  // Filter logic
+  const filteredPharmacies = pharmacies.filter((pharmacy) => {
     const matchesSearch =
-      pharmacy.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pharmacy.address.toLowerCase().includes(searchQuery.toLowerCase());
+      pharmacy.pharmacyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (pharmacy.address && pharmacy.address.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesCity = !selectedCity || pharmacy.city === selectedCity;
     return matchesSearch && matchesCity;
   });
@@ -99,7 +48,7 @@ const Pharmacies = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const cities = [...new Set(mockPharmacies.map((p) => p.city))];
+  const cities = [...new Set(pharmacies.map((p) => p.city))];
 
   return (
     <div className="min-h-screen py-8 px-4" style={{ backgroundColor: theme.background }}>
@@ -111,125 +60,122 @@ const Pharmacies = () => {
         {/* Search and Filter */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Search by name or address..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="px-4 py-3 rounded-lg border-2 outline-none"
-              style={{
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB',
-              }}
-            />
-            <select
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              className="px-4 py-3 rounded-lg border-2 outline-none"
-              style={{
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB',
-                backgroundColor: 'white',
-              }}
-            >
-              <option value="">All Cities</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border border-gray-200 w-full">
+              <Search className="text-gray-500" size={20} />
+              <input
+                type="text"
+                placeholder="Search by name or address..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 bg-transparent outline-none text-gray-700 text-lg"
+                style={{
+                  color: '#1A1A1A',
+                  borderColor: '#E5E7EB',
+                }}
+              />
+            </div>
+
+            <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
+              <MapPin className="text-gray-500" size={18} />
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="bg-transparent flex-1 outline-none text-gray-700"
+                style={{
+                  color: '#1A1A1A',
+                  borderColor: '#E5E7EB',
+                  backgroundColor: 'white',
+                }}
+              >
+                <option value="">All Cities</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
         {/* Pharmacies Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {currentPharmacies.map((pharmacy) => (
-              <div
-                key={pharmacy.id}
-                className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
-              >
-                {/* Header Section */}
-                <div className="flex items-center gap-4 mb-4">
-                  {/* Logo or Initial Placeholder */}
-                  <div
-                    className="w-16 h-16 rounded-xl flex items-center justify-center font-bold text-2xl"
-                    style={{
-                      backgroundColor: `${theme.primary}15`,
-                      color: theme.primary,
-                    }}
-                  >
-                    {pharmacy.name.charAt(0)}
-                  </div>
-
-                  {/* Pharmacy Name */}
-                  <div>
-                    <h3
-                      className="text-xl font-semibold"
-                      style={{ color: "#2D2D49" }}
-                    >
-                      {pharmacy.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">Verified Pharmacy</p>
-                  </div>
-                </div>
-
-                {/* Contact Info */}
-                <div className="space-y-2 text-sm mb-6">
-                  <p className="flex items-start text-gray-700">
-                    <span className="mr-2">📍</span>
-                    {pharmacy.address}
-                  </p>
-                  <p className="flex items-center text-gray-700">
-                    <span className="mr-2">📞</span>
-                    {pharmacy.phone}
-                  </p>
-                  <p className="flex items-center text-gray-700">
-                    <span className="mr-2">✉️</span>
-                    {pharmacy.email}
-                  </p>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    className="flex-1 py-2.5 rounded-lg font-semibold transition-colors"
-                    style={{
-                      backgroundColor: theme.primary,
-                      color: theme.text,
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.target.style.backgroundColor = theme.secondary)
-                    }
-                    onMouseLeave={(e) =>
-                      (e.target.style.backgroundColor = theme.primary)
-                    }
-                  >
-                    View Medicines
-                  </button>
-
-                  <button
-                    className="flex-1 py-2.5 rounded-lg border font-semibold transition-colors"
-                    style={{
-                      borderColor: theme.primary,
-                      color: theme.primary,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = theme.primary;
-                      e.target.style.color = theme.text;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = "transparent";
-                      e.target.style.color = theme.primary;
-                    }}
-                  >
-                    View on Map
-                  </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {currentPharmacies.map((pharmacy, index) => (
+            <div
+              key={pharmacy._id || index}
+              className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
+            >
+              {/* Header Section */}
+              <div className="flex items-center gap-4 mb-4">
+                <div>
+                  <h3 className="text-xl font-semibold" style={{ color: "#2D2D49" }}>
+                    {pharmacy.pharmacyName}
+                  </h3>
+                  <p className="text-sm text-gray-500">Verified Pharmacy</p>
                 </div>
               </div>
-            ))}
-          </div>
 
+              {/* Contact Info */}
+              <div className="space-y-2 text-sm mb-6">
+                {pharmacy.address && (
+                  <p className="flex items-start text-gray-700">
+                    <span className="mr-2"><MapPin size={20} color='#25bc95' /></span>
+                    {pharmacy.address}
+                  </p>
+                )}
+                {pharmacy.phone && (
+                  <p className="flex items-center text-gray-700">
+                    <span className="mr-2"><PhoneCall size={20} color='#25bc95' /></span>
+                    {pharmacy.phone}
+                  </p>
+                )}
+                {pharmacy.email && (
+                  <p className="flex items-center text-gray-700">
+                    <span className="mr-2"><Mail size={20} color='#25bc95' /></span>
+                    {pharmacy.email}
+                  </p>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  className="flex-1 py-2.5 rounded-lg font-semibold transition-colors"
+                  style={{
+                    backgroundColor: theme.primary,
+                    color: theme.text,
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = theme.secondary)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = theme.primary)
+                  }
+                >
+                  View Medicines
+                </button>
+
+                <button
+                  className="flex-1 py-2.5 rounded-lg border font-semibold transition-colors"
+                  style={{
+                    borderColor: theme.primary,
+                    color: theme.primary,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = theme.primary;
+                    e.target.style.color = theme.text;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = "transparent";
+                    e.target.style.color = theme.primary;
+                  }}
+                >
+                  View on Map
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* Pagination */}
         <div className="flex justify-center items-center gap-2">

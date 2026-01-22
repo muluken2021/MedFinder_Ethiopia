@@ -3,6 +3,7 @@ const express = require('express');
 const Pharmacy = require('../models/Pharmacy');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const { getPharmacyStats } = require("../controllers/pharmacyController");
 
 // POST /api/pharmacy/register
 router.post('/register', async (req, res) => {
@@ -53,5 +54,11 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+// GET DASHBOARD STATS
+router.get("/stats", getPharmacyStats);
+
+
 
 module.exports = router;

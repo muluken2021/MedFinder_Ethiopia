@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+ import { Search, MapPin, Filter } from "lucide-react";
 import { useSearchParams } from 'react-router-dom';
 import { medicines } from '../data/medicines';
 import { useTheme } from '../context/ThemeContext'
@@ -59,21 +60,28 @@ const SearchMedicine = () => {
     <div className="min-h-screen py-8 px-4" style={{ backgroundColor: theme.background }}>
       <div className="container mx-auto max-w-7xl">
         {/* Search Bar */}
+     
+
         <div className="mb-8">
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
-              <input
-                type="text"
-                placeholder="Enter medicine name..."
-                value={medicineName}
-                onChange={(e) => setMedicineName(e.target.value)}
-                className="flex-1 px-6 py-3 rounded-lg border-2 outline-none text-lg"
-                style={{ borderColor: '#E5E7EB', color: '#1A1A1A' }}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              />
+          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+
+            {/* Search Input */}
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-5 py-3 border border-gray-200 w-full">
+                <Search className="text-gray-500" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search for a medicine..."
+                  value={medicineName}
+                  onChange={(e) => setMedicineName(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  className="flex-1 bg-transparent outline-none text-gray-700 text-lg"
+                />
+              </div>
+
               <button
                 onClick={handleSearch}
-                className="text-white font-semibold px-8 py-3 rounded-lg"
+                className="px-8 py-3 rounded-xl text-white font-semibold transition hover:opacity-90"
                 style={{ backgroundColor: theme.primary }}
               >
                 Search
@@ -82,43 +90,51 @@ const SearchMedicine = () => {
 
             {/* Filters */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="px-4 py-3 rounded-lg border-2 outline-none bg-white"
-                style={{ borderColor: '#E5E7EB', color: '#1A1A1A' }}
-              >
-                <option value="">Select City</option>
-                <option value="addis-ababa">Addis Ababa</option>
-                <option value="dire-dawa">Dire Dawa</option>
-                <option value="bahir-dar">Bahir Dar</option>
-                <option value="mekelle">Mekelle</option>
-                <option value="awassa">Awassa</option>
-              </select>
+              
+              <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
+                <MapPin className="text-gray-500" size={18} />
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="bg-transparent flex-1 outline-none text-gray-700"
+                >
+                  <option value="">Select City</option>
+                  <option value="addis-ababa">Addis Ababa</option>
+                  <option value="dire-dawa">Dire Dawa</option>
+                  <option value="bahir-dar">Bahir Dar</option>
+                  <option value="mekelle">Mekelle</option>
+                  <option value="awassa">Awassa</option>
+                </select>
+              </div>
 
-              <select
-                value={availability}
-                onChange={(e) => setAvailability(e.target.value)}
-                className="px-4 py-3 rounded-lg border-2 outline-none bg-white"
-                style={{ borderColor: '#E5E7EB', color: '#1A1A1A' }}
-              >
-                <option value="">Availability</option>
-                <option value="available">Available</option>
-                <option value="out-of-stock">Out of Stock</option>
-              </select>
+              <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
+                <Filter className="text-gray-500" size={18} />
+                <select
+                  value={availability}
+                  onChange={(e) => setAvailability(e.target.value)}
+                  className="bg-transparent flex-1 outline-none text-gray-700"
+                >
+                  <option value="">Availability</option>
+                  <option value="available">Available</option>
+                  <option value="out-of-stock">Out of Stock</option>
+                </select>
+              </div>
 
-              <select
-                value={priceRange}
-                onChange={(e) => setPriceRange(e.target.value)}
-                className="px-4 py-3 rounded-lg border-2 outline-none bg-white"
-                style={{ borderColor: '#E5E7EB', color: '#1A1A1A' }}
-              >
-                <option value="">Price Range</option>
-                <option value="0-200">0 - 200 ETB</option>
-                <option value="200-500">200 - 500 ETB</option>
-                <option value="500-1000">500 - 1000 ETB</option>
-                <option value="1000+">1000+ ETB</option>
-              </select>
+              <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200">
+                <Filter className="text-gray-500" size={18} />
+                <select
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  className="bg-transparent flex-1 outline-none text-gray-700"
+                >
+                  <option value="">Price Range</option>
+                  <option value="0-200">0 - 200 ETB</option>
+                  <option value="200-500">200 - 500 ETB</option>
+                  <option value="500-1000">500 - 1000 ETB</option>
+                  <option value="1000+">1000+ ETB</option>
+                </select>
+              </div>
+
             </div>
           </div>
         </div>

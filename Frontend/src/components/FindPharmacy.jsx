@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { pharmacies } from '../data/Pharmacies.js';
+import { assets } from '../assets/assets.js';
+import { useTheme } from '../context/ThemeContext.jsx';
+import { SearchCode } from 'lucide-react';
 
 const FindPharmacy = () => {
+  const { theme } = useTheme()
   const [city, setCity] = useState('');
   const [filteredPharmacies, setFilteredPharmacies] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
 
-  const theme = { primary: '#2BB673' };
+  
 
   const filterByCity = (detectedCity) => {
     if (!detectedCity) return setFilteredPharmacies([]);
@@ -18,70 +21,63 @@ const FindPharmacy = () => {
       (p) => p.city.toLowerCase() === detectedCity.toLowerCase()
     );
     setFilteredPharmacies(results);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1);
   };
 
   const handleFindNearby = () => {
-  if (!navigator.geolocation) {
-    alert('Geolocation is not supported by your browser.');
-    return;
-  }
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      const { latitude, longitude } = position.coords;
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
 
-      try {
-        const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-        );
-        const data = await res.json();
-
-        const detectedCity = data.address.city || data.address.town || data.address.village || '';
-        const detectedStreet = data.address.road || '';
-        console.log(detectedCity , detectedStreet)
-
-        setCity(detectedCity);
-
-        // Filter pharmacies by street first
-        let results = [];
-        if (detectedStreet) {
-          results = pharmacies.filter(
-            (p) =>
-              p.address.toLowerCase().includes(detectedStreet.toLowerCase()) &&
-              p.city.toLowerCase() === detectedCity.toLowerCase()
-
-             
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
           );
-        }
+          const data = await res.json();
+          const detectedCity =
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            '';
+          const detectedStreet = data.address.road || '';
 
-        // If no results by street, fallback to city-only search
-        if (results.length === 0 && detectedCity) {
-          results = pharmacies.filter(
-            (p) => p.city.toLowerCase() === detectedCity.toLowerCase()
-          );
-          
-        }
+          setCity(detectedCity);
 
-        setFilteredPharmacies(results);
-      } catch (error) {
-        console.error('Reverse geocoding error:', error);
-        alert('Error detecting location. Please try again.');
-      } finally {
+          let results = [];
+          if (detectedStreet) {
+            results = pharmacies.filter(
+              (p) =>
+                p.address.toLowerCase().includes(detectedStreet.toLowerCase()) &&
+                p.city.toLowerCase() === detectedCity.toLowerCase()
+            );
+          }
+          if (results.length === 0 && detectedCity) {
+            results = pharmacies.filter(
+              (p) => p.city.toLowerCase() === detectedCity.toLowerCase()
+            );
+          }
+
+          setFilteredPharmacies(results);
+        } catch (error) {
+          alert('Error detecting location. Try again.');
+        } finally {
+          setLoading(false);
+        }
+      },
+      () => {
+        alert('Location access denied.');
         setLoading(false);
       }
-    },
-    (error) => {
-      console.error('Geolocation error:', error);
-      alert('Location access denied or unavailable.');
-      setLoading(false);
-    }
-  );
-};
+    );
+  };
 
-  // Pagination calculations
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredPharmacies.slice(indexOfFirst, indexOfLast);
@@ -89,87 +85,123 @@ const FindPharmacy = () => {
 
   return (
     <section
-      className="py-16 px-4"
-      style={{
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        marginTop: '2rem',
-      }}
+     style={{
+    // background: `linear-gradient(to right, ${theme.background}, ${theme.gradient1})`,
+  }}
     >
-      <div className="bg-[#b6f7d57a] bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 container mx-auto max-w-6xl">
-        <h2 className="text-gray-700 text-4xl font-extrabold text-center mb-6">
-          Find Pharmacies Near You
-        </h2>
+  <div className=" lg:px-30 backdrop-blur-xl bg-white/30 rounded-3xl p-10 container mx-auto max-w-full  border border-white/20">
 
-        <p className="text-center text-gray-700 mb-8 text-lg">
-          Find pharmacies in your current location. <span className="text-yellow-600">Notice:</span> results may differ if you have a VPN turned on.
-        </p>
-
-        <div className="flex justify-center mb-12">
+    {/* HEADER AREA */}
+    <div className=" flex flex-col md:flex-row items-center justify-between gap-10">
+      {/* Left */}
+      <div className="md:w-1/2 space-y-4">
+     
+          <p className="font-bold " style={{color: theme.primary}}>Nearby Pharmacies </p>
+          <h2
+            className="text-gray-600 text-3xl md:text-4xl font-bold"
+            
+          >
+            Find Pharmacies Nearby 
+          </h2>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Explore top pharmacies near you. Get the best medicines quickly and reliably.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </p>
           <button
             onClick={handleFindNearby}
-            className="px-6 py-3 rounded-xl bg-green-600 text-white font-semibold shadow-lg hover:bg-green-700 transition"
+            className="mt-3 cursor-pointer duration-300 transform hover:scale-105 px-8 lg:w-[70%] text-start py-3 rounded-xl  text-gray-600 border-green-400 border-1"
+            style={{
+              background: ` linear-gradient(135deg, ${theme.background}, ${theme.gradient1})`,
+            }}
           >
-            {loading ? 'Detecting Location...' : 'Find Pharmacies Near Me'}
-          </button>
-        </div>
-
-        {filteredPharmacies.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentItems.map((p) => (
-                <a
-                  key={p.id}
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                    p.name + ', ' + p.city
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow hover:scale-105 transform duration-300 flex flex-col justify-between"
-                >
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">{p.name}</h3>
-                    <p className="text-gray-600 mb-1">{p.address}</p>
-                    <p className="text-gray-600 mb-1">{p.city}</p>
-                    <p className="text-gray-600">{p.phone}</p>
-                  </div>
-                  <div className="mt-4 text-sm text-green-700 font-medium">
-                    View on Google Maps →
-                  </div>
-                </a>
-              ))}
-            </div>
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-8 gap-4">
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <span className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition disabled:opacity-50"
-                >
-                  Next
-                </button>
+            <div className="flex gap-5">
+              <SearchCode size={50}  color="green"/>
+              <div>
+                <p className="font-bold text-lg  py-2"> Find Pharmacy Near to you</p>
+                 Find your medicine in verified pharmacies across ethiopia with a single search 
               </div>
-            )}
-          </>
-        ) : city && !loading ? (
-          <p className="text-center text-gray-500 mt-8 text-lg">
-            No pharmacies found in "{city}"
-          </p>
-        ) : null}
+            </div>
+          </button>
+
+          
+        
+
+        <button
+          onClick={handleFindNearby}
+          className="mt-5 px-8 py-4 rounded-3xl text-white font-semibold shadow-lg text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+          style={{ backgroundImage:'linear-gradient(90deg, #2BB673, #0B8F83)'}}
+        >
+          {loading ? 'Detecting Location...' : 'Find Pharmacies Near Me'}
+        </button>
       </div>
-    </section>
+
+      {/* Right */}
+      <div className="hidden md:block md:w-1/2  justify-center">
+        <img src={assets.location} className="w-[600px]  rounded-2xl" />
+      </div>
+    </div>
+
+    {/* RESULTS */}
+    <div className="mt-16">
+      {filteredPharmacies.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {currentItems.map((p) => (
+              <a
+                key={p.id}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  `${p.name}, ${p.city}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-6 bg-white/80 backdrop-blur-md rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-white/30"
+              >
+                <h3 className="text-2xl font-semibold text-gray-900 mb-3">{p.name}</h3>
+                <p className="text-gray-700 mb-1">{p.address}</p>
+                <p className="text-gray-700">{p.city}</p>
+                <p className="text-gray-900 font-medium mt-2">{p.phone}</p>
+
+                <div className="mt-5 text-green-600 font-semibold text-sm">
+                  View on Google Maps →
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-10 gap-6 text-lg">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 disabled:opacity-50 transition"
+              >
+                Previous
+              </button>
+
+              <span className="px-4 py-2 bg-gray-100 rounded-xl text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 disabled:opacity-50 transition"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </>
+      ) : city && !loading ? (
+        <p className="text-center text-gray-500 mt-8 text-xl">
+          No pharmacies found in "{city}"
+        </p>
+      ) : null}
+    </div>
+  </div>
+</section>
+
   );
 };
 

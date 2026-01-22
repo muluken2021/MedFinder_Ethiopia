@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 const AddMedicine = () => {
   const navigate = useNavigate()
   const [showSuccess, setShowSuccess] = useState(false)
+  const [errorMsg,setErrorMsg] = useState("")
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -32,18 +33,42 @@ const AddMedicine = () => {
     })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // In a real app, this would send data to backend
-    console.log('Medicine added:', formData)
-    setShowSuccess(true)
-    
-    // Reset form after 2 seconds and redirect
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErrorMsg("");
+
+  try {
+    const token = localStorage.getItem("token"); // pharmacy JWT
+
+    const res = await fetch("http://localhost:5000/api/medicines/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setErrorMsg(data.message || "Failed to add medicine");
+      return;
+    }
+
+    console.log("Saved:", data);
+    setShowSuccess(true);
+
     setTimeout(() => {
-      setShowSuccess(false)
-      navigate('/dashboard/medicines')
-    }, 2000)
+      navigate("/dashboard/medicines");
+    }, 2000);
+
+  } catch (err) {
+    console.error(err);
+    setErrorMsg("Network error. Try again!");
   }
+};
+
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -66,7 +91,13 @@ const AddMedicine = () => {
       )}
 
       {/* Form Card */}
+
       <div className="bg-white rounded-lg shadow-md p-8">
+        {errorMsg && (
+            <div className="mb-4 p-4 bg-red-100 border-l-4 border-red-500 rounded">
+              <p className="text-red-700 font-semibold">{errorMsg}</p>
+            </div>
+          )}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Medicine Name */}
           <div>
@@ -256,5 +287,6 @@ const AddMedicine = () => {
 }
 
 export default AddMedicine
+
 
 
