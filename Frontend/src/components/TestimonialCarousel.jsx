@@ -1,40 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, ArrowRight, Star } from "lucide-react";
-import { useTheme } from "../context/ThemeContext";
+import { ArrowLeft, ArrowRight, Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
     id: 1,
     name: "Selam H.",
-    role: "Software Engineer",
+    role: "Patient",
     avatar: "https://randomuser.me/api/portraits/women/65.jpg",
     rating: 5,
     quote:
-      "This app helped me find the nearest pharmacy in minutes. Extremely useful and reliable!",
+      "This platform helped me find essential medication in minutes when every other pharmacy was out of stock. A lifesaver for our family.",
   },
   {
     id: 2,
-    name: "Tadesse K.",
-    role: "Doctor",
+    name: "Dr. Tadesse K.",
+    role: "Medical Professional",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    rating: 4.8,
+    rating: 5,
     quote:
-      "A must-have app for anyone looking for fast access to medicine. Smooth interface and accurate results.",
+      "I recommend this to all my patients. The real-time inventory tracking is accurate and saves people precious time during emergencies.",
   },
   {
     id: 3,
     name: "Martha A.",
-    role: "Student",
+    role: "Regular User",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
     rating: 5,
     quote:
-      "I love the map integration! Finding pharmacies around my area is now effortless.",
+      "The interface is so clean and easy to use. I love how I can see exactly which pharmacies are open before I leave my house.",
   },
 ];
 
 const ModernTestimonialCarousel = () => {
-  const { theme } = useTheme();
   const [current, setCurrent] = useState(0);
+
+  // Modern Medical Palette
+  const colors = {
+    primary: '#2563EB',
+    textMain: '#111827',
+    textSub: '#6B7280',
+    bgLight: '#F9FAFB'
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,63 +58,59 @@ const ModernTestimonialCarousel = () => {
   };
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-2xl mx-auto text-center relative mb-40">
-        <div className="text-gray-600 mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold py-3">
-            What Our Users Say
+    <section className="py-24 bg-white border-t border-gray-100">
+      <div className="max-w-5xl mx-auto px-6 text-center">
+        
+        {/* Header Section */}
+        <div className="max-w-2xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+            Trusted by the <span className="text-brand-500">Community</span>
           </h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Praesentium animi dolor eveniet officiis dolorem blanditiis
-            facilis ullam voluptates, voluptatibus ipsum.
+          <p className="text-gray-500 text-lg">
+            Hear from the patients and healthcare providers using our network 
+            to improve medical access across the country.
           </p>
         </div>
 
         {/* Carousel Container */}
-        <div className="relative lg:flex  items-center justify-center">
+        <div className="relative min-h-[400px] flex items-center justify-center">
           {testimonials.map((t, index) => {
-            let positionClasses = "absolute top-0 w-full md:w-2/3 p-8 bg-white rounded-3xl shadow-2xl transform transition-all duration-700 ease-in-out";
+            const isActive = index === current;
             
-            // Determine position for large screens
-            if (window.innerWidth >= 768) {
-              positionClasses +=
-                index === current
-                  ? " translate-x-0 z-20 scale-100 opacity-100"
-                  : index === (current - 1 + testimonials.length) % testimonials.length
-                  ? " -translate-x-full z-10 scale-90 opacity-50"
-                  : " translate-x-full z-10 scale-90 opacity-50";
-            } else {
-              // Mobile: only middle card visible, others blurred behind
-              if (index === current) {
-                positionClasses += " translate-x-0 z-20 scale-100 opacity-100";
-              } else {
-                positionClasses += " translate-x-0 z-10 scale-95 opacity-30 blur-sm";
-              }
-            }
-
             return (
-              <div key={t.id} className={positionClasses}>
-                <div className="flex flex-col md:flex-row items-center gap-6">
-                  <img
-                    src={t.avatar}
-                    alt={t.name}
-                    className="w-24 h-24 rounded-full object-cover shadow-lg"
-                  />
-                  <div className="text-left flex-1">
-                    <p className="text-gray-700 italic mb-4">“{t.quote}”</p>
-                    <h4 className="font-bold text-gray-900">{t.name}</h4>
-                    <p className="text-gray-500 text-sm">{t.role}</p>
-                    <div className="flex mt-2">
+              <div 
+                key={t.id} 
+                className={`absolute w-full max-w-2xl transition-all duration-700 ease-in-out transform
+                  ${isActive ? "opacity-100 scale-100 z-20" : "opacity-0 scale-95 z-10 pointer-events-none"}`}
+              >
+                <div className="bg-gray-50 border border-gray-100 p-8 md:p-12 rounded-[2rem] relative">
+                  <Quote className="absolute top-8 right-8 text-blue-100" size={64} />
+                  
+                  <div className="flex flex-col items-center text-center">
+                    <div className="flex mb-6">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
-                          className={`${
-                            i < Math.round(t.rating) ? "text-yellow-400" : "text-gray-300"
-                          }`}
-                          size={16}
+                          className={`mx-0.5 ${i < Math.round(t.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`}
+                          size={18}
                         />
                       ))}
+                    </div>
+
+                    <p className="text-xl md:text-2xl text-gray-700 font-medium italic leading-relaxed mb-8 relative z-10">
+                      “{t.quote}”
+                    </p>
+
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={t.avatar}
+                        alt={t.name}
+                        className="w-14 h-14 rounded-full border-2 border-white shadow-md object-cover"
+                      />
+                      <div className="text-left">
+                        <h4 className="font-bold text-gray-900">{t.name}</h4>
+                        <p className="text-brand-500 text-sm font-semibold uppercase tracking-wider">{t.role}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -116,28 +118,31 @@ const ModernTestimonialCarousel = () => {
             );
           })}
 
-          {/* Navigation Arrows */}
-          <button
-            onClick={handlePrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white shadow-lg hover:scale-110 transition"
-          >
-            <ArrowLeft size={24} stroke={theme.primary} />
-          </button>
-          <button
-            onClick={handleNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white shadow-lg hover:scale-110 transition"
-          >
-            <ArrowRight size={24} stroke={theme.primary} />
-          </button>
+          {/* Navigation Controls - Clean Outlined Style */}
+          <div className="absolute w-full flex justify-between items-center z-30 px-2 pointer-events-none">
+            <button
+              onClick={handlePrev}
+              className="pointer-events-auto p-4 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-brand-500 hover:border-blue-200 hover:shadow-lg transition-all"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <button
+              onClick={handleNext}
+              className="pointer-events-auto p-4 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-brand-500 hover:border-blue-200 hover:shadow-lg transition-all"
+            >
+              <ArrowRight size={20} />
+            </button>
+          </div>
         </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-3 mt-8">
+        {/* Minimal Progress Dots */}
+        <div className="flex justify-center gap-2 mt-12">
           {testimonials.map((_, i) => (
-            <span
+            <button
               key={i}
-              className={`w-3 h-3 rounded-full transition ${
-                i === current ? `bg-[${theme.primary}]` : "bg-gray-300"
+              onClick={() => setCurrent(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === current ? "w-8 text-brand-500" : "w-2 bg-gray-200"
               }`}
             />
           ))}

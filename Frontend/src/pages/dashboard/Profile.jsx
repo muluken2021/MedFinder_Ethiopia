@@ -1,8 +1,22 @@
 import React, { useState } from 'react'
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Award, 
+  Lock, 
+  Camera, 
+  CheckCircle, 
+  ShieldCheck,
+  Edit2,
+  X
+} from 'lucide-react'
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  
   const [formData, setFormData] = useState({
     name: 'Central Pharmacy',
     email: 'info@centralpharmacy.et',
@@ -20,335 +34,219 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value
-    })
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target
-    setPasswordData({
-      ...passwordData,
-      [name]: value
-    })
+    setPasswordData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // In a real app, this would update the profile
-    console.log('Profile updated:', formData)
     setIsEditing(false)
     setShowSuccess(true)
     setTimeout(() => setShowSuccess(false), 3000)
   }
 
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault()
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert('New passwords do not match!')
-      return
-    }
-    // In a real app, this would update the password
-    console.log('Password updated')
-    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' })
-    alert('Password updated successfully!')
-  }
-
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2" style={{ color: '#2D2D49' }}>Pharmacy Profile</h1>
-        <p style={{ color: '#1A1A1A' }}>Manage your pharmacy information and settings</p>
-      </div>
-
-      {/* Success Alert */}
-      {showSuccess && (
-        <div className="mb-6 p-4 rounded-lg flex items-center space-x-3" style={{ backgroundColor: 'rgba(43, 182, 115, 0.1)', borderLeft: '4px solid #2BB673' }}>
-          <svg className="w-6 h-6 flex-shrink-0" style={{ color: '#2BB673' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          <p className="font-semibold" style={{ color: '#2BB673' }}>Profile updated successfully!</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Profile Information */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold" style={{ color: '#2D2D49' }}>Pharmacy Details</h2>
-              {!isEditing && (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 rounded-lg font-semibold transition-colors"
-                  style={{ 
-                    backgroundColor: '#0B6B6B',
-                    color: 'white'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
-                >
-                  Edit Profile
-                </button>
-              )}
-            </div>
-
-            {isEditing ? (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Pharmacy Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>City</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Address</label>
-                  <textarea
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    rows="3"
-                    className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors resize-none"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  ></textarea>
-                </div>
-
-                <div>
-                  <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>License Number</label>
-                  <input
-                    type="text"
-                    name="licenseNumber"
-                    value={formData.licenseNumber}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  />
-                </div>
-
-                <div className="flex space-x-4 pt-4">
-                  <button
-                    type="submit"
-                    className="flex-1 py-3 px-6 rounded-lg font-semibold transition-colors"
-                    style={{ 
-                      backgroundColor: '#0B6B6B',
-                      color: 'white'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
-                  >
-                    Save Changes
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                    className="px-6 py-3 rounded-lg font-semibold border-2 transition-colors"
-                    style={{ 
-                      borderColor: '#E5E7EB',
-                      color: '#1A1A1A',
-                      backgroundColor: 'transparent'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#F6F8FA'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Pharmacy Name</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{formData.name}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Email</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{formData.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Phone</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{formData.phone}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>City</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{formData.city}</p>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Address</p>
-                  <p className="font-semibold" style={{ color: '#2D2D49' }}>{formData.address}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>License Number</p>
-                  <p className="font-semibold" style={{ color: '#2D2D49' }}>{formData.licenseNumber}</p>
-                </div>
-              </div>
-            )}
+    <div className="min-h-screen bg-[#F8FAFC] pb-12">
+      <div className="max-w-6xl mx-auto px-6">
+        
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pt-8">
+          <div>
+            <h1 className="text-4xl font-extrabold text-[#2D2D49] tracking-tight">
+              Pharmacy <span className="text-blue-600">Profile</span>
+            </h1>
+            <p className="text-gray-500 font-medium mt-1">Verify and manage your establishment's public credentials.</p>
           </div>
+          
+          {showSuccess && (
+            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-6 py-3 rounded-2xl border border-green-100 animate-in fade-in slide-in-from-top-4">
+              <CheckCircle size={20} />
+              <span className="font-bold">Settings Updated Successfully</span>
+            </div>
+          )}
         </div>
 
-        {/* Password Update */}
-        <div>
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h3 className="text-xl font-bold mb-4" style={{ color: '#2D2D49' }}>Update Password</h3>
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: '#2D2D49' }}>Current Password</label>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full px-3 py-2 rounded-lg border-2 outline-none"
-                  style={{ 
-                    color: '#1A1A1A',
-                    borderColor: '#E5E7EB'
-                  }}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: '#2D2D49' }}>New Password</label>
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full px-3 py-2 rounded-lg border-2 outline-none"
-                  style={{ 
-                    color: '#1A1A1A',
-                    borderColor: '#E5E7EB'
-                  }}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1" style={{ color: '#2D2D49' }}>Confirm Password</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={passwordData.confirmPassword}
-                  onChange={handlePasswordChange}
-                  className="w-full px-3 py-2 rounded-lg border-2 outline-none"
-                  style={{ 
-                    color: '#1A1A1A',
-                    borderColor: '#E5E7EB'
-                  }}
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-2 px-4 rounded-lg font-semibold transition-colors"
-                style={{ 
-                  backgroundColor: '#0B6B6B',
-                  color: 'white'
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
-              >
-                Update Password
-              </button>
-            </form>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Main Info Card */}
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 overflow-hidden">
+              <div className="p-8 md:p-10">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-blue-50 rounded-2xl text-blue-600">
+                      <ShieldCheck size={24} />
+                    </div>
+                    <h2 className="text-2xl font-black text-[#2D2D49]">Verified Credentials</h2>
+                  </div>
+                  
+                  <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all ${
+                      isEditing 
+                      ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' 
+                      : 'bg-blue-600 text-white shadow-lg shadow-blue-200 hover:scale-105'
+                    }`}
+                  >
+                    {isEditing ? <><X size={18} /> Cancel</> : <><Edit2 size={18} /> Edit Profile</>}
+                  </button>
+                </div>
 
-          {/* Logo Upload */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold mb-4" style={{ color: '#2D2D49' }}>Pharmacy Logo</h3>
-            <div className="text-center">
-              <div className="w-32 h-32 mx-auto mb-4 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(11, 107, 107, 0.1)' }}>
-                <svg className="w-16 h-16" style={{ color: '#0B6B6B' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <ProfileField 
+                      icon={<User size={18}/>} 
+                      label="Pharmacy Name" 
+                      name="name" 
+                      value={formData.name} 
+                      isEditing={isEditing} 
+                      onChange={handleChange} 
+                    />
+                    <ProfileField 
+                      icon={<Mail size={18}/>} 
+                      label="Email Address" 
+                      name="email" 
+                      value={formData.email} 
+                      isEditing={isEditing} 
+                      onChange={handleChange} 
+                    />
+                    <ProfileField 
+                      icon={<Phone size={18}/>} 
+                      label="Contact Number" 
+                      name="phone" 
+                      value={formData.phone} 
+                      isEditing={isEditing} 
+                      onChange={handleChange} 
+                    />
+                    <ProfileField 
+                      icon={<Award size={18}/>} 
+                      label="License Number" 
+                      name="licenseNumber" 
+                      value={formData.licenseNumber} 
+                      isEditing={isEditing} 
+                      onChange={handleChange} 
+                    />
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <ProfileField 
+                      icon={<MapPin size={18}/>} 
+                      label="City / Region" 
+                      name="city" 
+                      value={formData.city} 
+                      isEditing={isEditing} 
+                      onChange={handleChange} 
+                    />
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-black text-gray-400 uppercase tracking-widest ml-1">
+                        <MapPin size={14} /> Official Address
+                      </label>
+                      {isEditing ? (
+                        <textarea
+                          name="address"
+                          value={formData.address}
+                          onChange={handleChange}
+                          rows="3"
+                          className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-blue-600/20 focus:bg-white outline-none transition-all font-bold resize-none"
+                        />
+                      ) : (
+                        <div className="px-5 py-4 rounded-2xl bg-gray-50/50 font-bold text-[#2D2D49]">{formData.address}</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {isEditing && (
+                    <button
+                      type="submit"
+                      className="w-full py-4 rounded-2xl bg-[#2BB673] text-white font-black shadow-lg shadow-green-100 hover:scale-[1.01] active:scale-95 transition-all mt-4"
+                    >
+                      Save Professional Changes
+                    </button>
+                  )}
+                </form>
               </div>
-              <input
-                type="file"
-                accept="image/*"
-                className="w-full text-sm"
-              />
-              <p className="text-xs mt-2" style={{ color: '#1A1A1A' }}>Recommended: 200x200px</p>
             </div>
           </div>
+
+          {/* Sidebar Settings */}
+          <div className="lg:col-span-4 space-y-8">
+            
+            {/* Logo Upload Section */}
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-blue-900/5 border border-gray-100 text-center">
+              <h3 className="text-lg font-black text-[#2D2D49] mb-6">Pharmacy Identity</h3>
+              <div className="relative inline-block group">
+                <div className="w-32 h-32 mx-auto rounded-[2rem] bg-blue-50 flex items-center justify-center border-4 border-white shadow-lg overflow-hidden transition-transform group-hover:scale-105">
+                  <User size={48} className="text-blue-600" />
+                </div>
+                <label className="absolute -bottom-2 -right-2 p-3 bg-white rounded-xl shadow-md border border-gray-100 text-blue-600 cursor-pointer hover:bg-blue-600 hover:text-white transition-all">
+                  <Camera size={20} />
+                  <input type="file" className="hidden" accept="image/*" />
+                </label>
+              </div>
+              <p className="text-xs font-bold text-gray-400 mt-6 uppercase tracking-tighter">Click icon to update brand logo</p>
+            </div>
+
+            {/* Password Update Card */}
+            <div className="bg-[#2D2D49] rounded-[2.5rem] p-8 text-white shadow-2xl shadow-blue-900/20 relative overflow-hidden">
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-6 text-blue-400">
+                  <Lock size={20} />
+                  <h3 className="font-black uppercase tracking-widest text-sm text-white">Security Settings</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <SidebarInput placeholder="Current Password" type="password" name="currentPassword" />
+                  <SidebarInput placeholder="New Password" type="password" name="newPassword" />
+                  <SidebarInput placeholder="Confirm New Password" type="password" name="confirmPassword" />
+                  
+                  <button className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all mt-2">
+                    Update Security
+                  </button>
+                </div>
+              </div>
+              <div className="absolute -bottom-10 -right-10 text-white/5 rotate-12">
+                <Lock size={150} />
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   )
 }
 
+// Sub-components for cleaner code
+const ProfileField = ({ label, icon, isEditing, value, onChange, name, type = "text" }) => (
+  <div className="space-y-2">
+    <label className="flex items-center gap-2 text-sm font-black text-gray-400 uppercase tracking-widest ml-1">
+      {icon} {label}
+    </label>
+    {isEditing ? (
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-blue-600/20 focus:bg-white outline-none transition-all font-bold text-[#1A1A1A]"
+      />
+    ) : (
+      <div className="px-5 py-4 rounded-2xl bg-gray-50/50 font-bold text-[#2D2D49] truncate">
+        {value}
+      </div>
+    )}
+  </div>
+)
+
+const SidebarInput = (props) => (
+  <input
+    {...props}
+    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/10 focus:bg-white/20 focus:border-blue-400 outline-none text-white placeholder:text-white/30 font-medium transition-all"
+  />
+)
+
 export default Profile
-
-
-

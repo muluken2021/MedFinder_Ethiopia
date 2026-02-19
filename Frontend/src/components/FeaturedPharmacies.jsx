@@ -1,7 +1,6 @@
 import React from "react";
-import { useTheme } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import { Hospital, Scan, ScanSearch, Search } from "lucide-react";
+import { MapPin, Star, ArrowRight, Building2, CheckCircle2 } from "lucide-react";
 
 const pharmacies = [
   {
@@ -9,118 +8,125 @@ const pharmacies = [
     name: "Bethel Pharmacy",
     location: "Addis Ababa, 22 Mazoria",
     rating: 4.8,
-    image: "https://tse1.mm.bing.net/th/id/OIP.DgIQRnpEVLzlUy7Yi_ZOgwHaFj?pid=Api&P=0&h=220",
+    image: "https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&q=80&w=800",
   },
   {
     id: 2,
     name: "MedStar Pharmacy",
     location: "Bole, Morning Star Mall",
     rating: 4.6,
-    image: "https://tse3.mm.bing.net/th/id/OIP.GRDaam6CztlCWUC6IK0CUwHaEL?pid=Api&P=0&h=220",
+    image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&q=80&w=800",
   },
   {
     id: 3,
     name: "Alem Pharmacy",
     location: "Piassa, Churchill Ave",
     rating: 4.4,
-    image: "https://tse3.mm.bing.net/th/id/OIP.sZEezQGXv64q1SFJNtH_1wHaD4?pid=Api&P=0&h=220",
+    image: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&q=80&w=800",
   },
 ];
 
 const FeaturedPharmaciesHero = () => {
-  const { theme } = useTheme();
   const navigate = useNavigate();
 
   return (
-    <section className="px-5 py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-20">
-  
+    <section className="relative py-24 bg-white overflow-hidden">
+      {/* Subtle Background Pattern */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50 -skew-x-12 translate-x-32 z-0"></div>
 
-        {/* Right Side - Vertical Stacked Images */}
-        <div className="md:w-1/2 flex flex-col gap-6">
-          {/* Top Image - Full Width */}
-          <div className="relative w-full h-64 rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src={pharmacies[0].image}
-              alt={pharmacies[0].name}
-              className="w-full h-full object-cover"
-            />
-            {/* Darker gradient overlay for better text visibility */}
-            <div className="absolute bottom-0 left-0 w-full h-55 bg-gradient-to-t from-black/90 to-transparent"></div>
-            <div className="absolute bottom-4 left-4 right-4 text-white z-10">
-              <h3 className="font-bold text-lg drop-shadow-lg">{pharmacies[0].name}</h3>
-              <p className="text-sm drop-shadow-md">{pharmacies[0].location}</p>
+      <div className="container mx-auto px-6 lg:px-16 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-16 items-center">
+          
+          {/* GRID: LEFT SIDE (Refined Bento Layout) */}
+          <div className="w-full lg:w-1/2 grid grid-cols-2 gap-6 h-[520px]">
+            {/* Primary Featured Card */}
+            <div 
+              className="relative col-span-1 row-span-2 rounded-3xl overflow-hidden group cursor-pointer shadow-lg border border-gray-100"
+              onClick={() => navigate(`/pharmacy/${pharmacies[0].id}`)}
+            >
+              <img src={pharmacies[0].image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt={pharmacies[0].name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1">
+                    <Star size={10} className="fill-yellow-400 text-yellow-400" /> {pharmacies[0].rating}
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-1">{pharmacies[0].name}</h3>
+                <p className="text-white/80 text-xs flex items-center gap-1"><MapPin size={12} /> {pharmacies[0].location}</p>
+              </div>
+            </div>
+
+            {/* Top Right Card */}
+            <div 
+              className="relative col-span-1 rounded-3xl overflow-hidden group cursor-pointer shadow-md border border-gray-100"
+              onClick={() => navigate(`/pharmacy/${pharmacies[1].id}`)}
+            >
+              <img src={pharmacies[1].image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt={pharmacies[1].name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 text-white">
+                <h4 className="font-bold text-sm">{pharmacies[1].name}</h4>
+                <div className="flex items-center gap-1 text-[10px] text-white/80">
+                   <Star size={10} className="fill-yellow-400 text-yellow-400"/> {pharmacies[1].rating}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Right Card */}
+            <div 
+              className="relative col-span-1 rounded-3xl overflow-hidden group cursor-pointer shadow-md border border-gray-100"
+              onClick={() => navigate(`/pharmacy/${pharmacies[2].id}`)}
+            >
+              <img src={pharmacies[2].image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt={pharmacies[2].name} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 text-white">
+                <h4 className="font-bold text-sm">{pharmacies[2].name}</h4>
+                <div className="flex items-center gap-1 text-[10px] text-white/80">
+                   <Star size={10} className="fill-yellow-400 text-yellow-400"/> {pharmacies[2].rating}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CONTENT: RIGHT SIDE */}
+          <div className="w-full lg:w-1/2 space-y-6">
+            
+            <h2 className="text-4xl md:text-5xl font-bold text-[#111827] leading-tight">
+              Verified <span className="text-brand-500">Institutional</span> Partners
+            </h2>
+            
+            <p className="text-gray-500 text-lg leading-relaxed max-w-lg">
+              We collaborate with Ethiopia's top-rated pharmaceutical institutions to ensure 
+              authentic medicine, professional storage, and fair pricing.
+            </p>
+
+            <ul className="space-y-3 pt-2">
+               {['Ministry of Health Certified', 'Real-time Stock Verification', 'Temperature Controlled Storage'].map((item) => (
+                 <li key={item} className="flex items-center gap-3 text-gray-700 font-medium">
+                   <CheckCircle2 size={18} className="text-brand-400" /> {item}
+                 </li>
+               ))}
+            </ul>
+
+            <div className="pt-6">
               <button
-                onClick={() => navigate(`/pharmacy/${pharmacies[0].id}`)}
-                className="cursor-pointer duration-300 transform hover:scale-110 mt-2 px-3 py-1 text-sm rounded-xl font-semibold drop-shadow-md"
-                style={{
-                  background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`,
-                }}
+                onClick={() => navigate("/pharmacies")}
+                className="cursor-pointer group flex items-center justify-between gap-4 p-4 rounded-2xl bg-white border border-gray-200 hover:border-brand-400 hover:shadow-lg hover:shadow-blue-50 transition-all w-full max-w-sm"
               >
-                View on Map
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-brand-500 text-white group-hover:bg-brand-500 transition-colors">
+                    <Building2 size={24} />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[#111827] font-bold text-base leading-none mb-1">Explore Directory</p>
+                    <p className="text-gray-400 text-xs font-medium">1,200+ verified locations</p>
+                  </div>
+                </div>
+                <ArrowRight className="text-gray-300 group-hover:text-brand-400 group-hover:translate-x-1 transition-all" />
               </button>
             </div>
           </div>
 
-          {/* Bottom Images - Half Width Each */}
-          <div className="flex gap-6">
-            {[1, 2].map((i) => (
-              <div
-                key={pharmacies[i].id}
-                className="relative w-1/2 h-48 rounded-2xl overflow-hidden shadow-2xl"
-              >
-                <img
-                  src={pharmacies[i].image}
-                  alt={pharmacies[i].name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-0 left-0 w-full h-55 bg-gradient-to-t from-black/90 to-transparent"></div>
-                <div className="p-2 absolute bottom-2 left-2 right-2 text-white z-10">
-                  <h3 className="font-bold text-sm drop-shadow-lg">{pharmacies[i].name}</h3>
-                  <p className="text-xs drop-shadow-md">{pharmacies[i].location}</p>
-                  <button
-                    onClick={() => navigate(`/pharmacy/${pharmacies[i].id}`)}
-                    className=" cursor-pointer duration-300 transform hover:scale-110 mt-3 px-2 py-1 text-xs rounded-xl font-semibold drop-shadow-md"
-                    style={{
-                      background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`,
-                    }}
-                  >
-                    View on Map
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-              {/* Left Side - Title */}
-        <div className="md:w-1/2 space-y-6 flex flex-col justify-center">
-          <p className="font-bold " style={{color: theme.primary}}>Selected Pharmacies</p>
-          <h2
-            className="text-gray-600 text-3xl md:text-4xl font-bold"
-            
-          >
-            Featured Pharmacies
-          </h2>
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Explore top pharmacies near you. Get the best medicines quickly and reliably.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea earum saepe ex dolores hic totam quibusdam maiores commodi aliquam rem consectetur, alias illum nobis magni officia? Rem eveniet perferendis exercitationem.
-          </p>
-          <button
-            onClick={() => navigate("/pharmacies")}
-            className="cursor-pointer duration-300 transform hover:scale-105 px-8 lg:w-[70%] text-start py-3 rounded-xl  text-gray-600 border-green-400 border-1"
-            style={{
-              background: ` linear-gradient(135deg, ${theme.background}, ${theme.gradient1})`,
-            }}
-          >
-            <div className="flex gap-5">
-              <ScanSearch size={50}  color="green"/>
-              <div>
-                <p className="font-bold text-lg  py-2"> Find Pharmacy</p>
-                 Find your medicine in verified pharmacies across ethiopia with a single search 
-              </div>
-            </div>
-          </button>
         </div>
       </div>
     </section>

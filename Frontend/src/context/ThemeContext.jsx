@@ -1,27 +1,53 @@
-import { createContext, useContext, useState } from "react";
+"use client";
 
-const ThemeContext = createContext();
+import { createContext, useState, useContext, useEffect } from "react";
+
+const ThemeContext = createContext(undefined);
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState({
-    primary: "#25bc95",
-    secondary: "#25bc95",
-    accent: "#F2F2F2",
-    text: "#FFFFFF",
-    background: "#F9FAFB",
-    dark_text: "#1A1A1A",
-    normal_text: "#9a9a9a",
-    gradient1:"#c9ece4",
-    gradient2:"#25bc966f"
+  const [theme, setTheme] = useState("light");
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  });
+  useEffect(() => {
+    // Run only on client
+    const savedTheme = localStorage.getItem("theme");
+    const initialTheme = savedTheme || "light";
+
+    setTheme(initialTheme);
+    setIsInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem("theme", theme);
+
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, [theme, isInitialized]);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) =>
+      prevTheme === "light" ? "dark" : "light"
+    );
+  };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-// Custom hook for easy access
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+
+  return context;
+};

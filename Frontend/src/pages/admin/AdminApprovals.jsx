@@ -1,10 +1,21 @@
 import React, { useState } from 'react'
+import { 
+  CheckCircle, 
+  XCircle, 
+  Eye, 
+  FileText, 
+  ClipboardCheck, 
+  MapPin, 
+  Phone, 
+  Mail,
+  Calendar,
+  Search,
+  ArrowRight
+} from 'lucide-react'
 
 const AdminApprovals = () => {
   const [selectedRequest, setSelectedRequest] = useState(null)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
-
-  // Mock pending requests
   const [requests, setRequests] = useState([
     {
       id: 1,
@@ -43,238 +54,154 @@ const AdminApprovals = () => {
     }
   ])
 
-  const handleApprove = (id) => {
-    if (window.confirm('Approve this request?')) {
-      setRequests(requests.map(r => 
-        r.id === id ? { ...r, status: 'Approved' } : r
-      ))
-    }
+  const handleAction = (id, newStatus) => {
+    setRequests(requests.map(r => 
+      r.id === id ? { ...r, status: newStatus } : r
+    ))
+    setShowDetailsModal(false)
   }
 
-  const handleReject = (id) => {
-    if (window.confirm('Reject this request?')) {
-      setRequests(requests.filter(r => r.id !== id))
-    }
-  }
-
-  const handleViewDetails = (request) => {
-    setSelectedRequest(request)
-    setShowDetailsModal(true)
-  }
+  const pendingCount = requests.filter(r => r.status === 'Awaiting Review').length
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2" style={{ color: '#2D2D49' }}>Approvals & Pending Requests</h1>
-        <p style={{ color: '#1A1A1A' }}>Review and approve pharmacy registrations and medicine updates</p>
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Header with Stats */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-black text-[#2D2D49] tracking-tight">Compliance <span className="text-brand-600">Queue</span></h1>
+          <p className="text-gray-500 font-medium mt-1">Verification required for {pendingCount} new submissions.</p>
+        </div>
+        <div className="flex gap-4">
+          <div className="bg-amber-50 border border-amber-100 px-6 py-3 rounded-2xl flex items-center gap-3">
+            <div className="w-3 h-3 bg-amber-500 rounded-full animate-pulse" />
+            <span className="text-amber-700 font-bold text-sm">{pendingCount} Pending</span>
+          </div>
+        </div>
       </div>
 
-      {/* Pending Requests Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Grid of Pending Requests */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {requests.filter(r => r.status === 'Awaiting Review').map((request) => (
-          <div key={request.id} className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <span
-                className="px-3 py-1 rounded-full text-sm font-semibold"
-                style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#F59E0B' }}
-              >
-                {request.status}
-              </span>
-              <span className="text-xs" style={{ color: '#1A1A1A' }}>{request.type}</span>
-            </div>
+          <div key={request.id} className="bg-white rounded-[2rem] border border-gray-100 shadow-xl shadow-brand-900/5 overflow-hidden group hover:border-brand-200 transition-all duration-300">
+            <div className="p-8">
+              <div className="flex justify-between items-start mb-6">
+                <div className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest ${
+                  request.type.includes('Pharmacy') ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'
+                }`}>
+                  {request.type}
+                </div>
+                <div className="flex items-center gap-2 text-gray-400 font-bold text-xs">
+                  <Calendar size={14} /> {request.submissionDate}
+                </div>
+              </div>
 
-            <h3 className="text-xl font-bold mb-2" style={{ color: '#2D2D49' }}>
-              {request.pharmacyName || request.medicineName}
-            </h3>
+              <h3 className="text-2xl font-black text-[#2D2D49] mb-4 group-hover:text-brand-600 transition-colors">
+                {request.pharmacyName || request.medicineName}
+              </h3>
 
-            {request.licenseNumber && (
-              <p className="text-sm mb-2" style={{ color: '#1A1A1A' }}>
-                License: <span className="font-semibold">{request.licenseNumber}</span>
-              </p>
-            )}
+              <div className="space-y-3 mb-8">
+                {request.licenseNumber && (
+                  <div className="flex items-center gap-3 text-gray-500 font-medium">
+                    <FileText size={18} className="text-brand-500" />
+                    License: <span className="text-[#2D2D49] font-bold">{request.licenseNumber}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-3 text-gray-500 font-medium">
+                  <MapPin size={18} className="text-brand-500" />
+                  {request.city || 'Central Database'}
+                </div>
+              </div>
 
-            <p className="text-sm mb-4" style={{ color: '#1A1A1A' }}>
-              Submitted: {request.submissionDate}
-            </p>
-
-            <div className="flex space-x-2">
-              <button
-                onClick={() => handleApprove(request.id)}
-                className="flex-1 py-2 px-4 rounded-lg font-semibold transition-colors"
-                style={{ 
-                  backgroundColor: '#2BB673',
-                  color: 'white'
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#239e5f'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#2BB673'}
-              >
-                ✅ Approve
-              </button>
-              <button
-                onClick={() => handleReject(request.id)}
-                className="flex-1 py-2 px-4 rounded-lg font-semibold border-2 transition-colors"
-                style={{ 
-                  borderColor: '#EF4444',
-                  color: '#EF4444',
-                  backgroundColor: 'transparent'
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-              >
-                ❌ Reject
-              </button>
-              <button
-                onClick={() => handleViewDetails(request)}
-                className="px-4 py-2 rounded-lg font-semibold border-2 transition-colors"
-                style={{ 
-                  borderColor: '#0B6B6B',
-                  color: '#0B6B6B',
-                  backgroundColor: 'transparent'
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(11, 107, 107, 0.1)'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                title="View Details"
-              >
-                🔍
-              </button>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => { setSelectedRequest(request); setShowDetailsModal(true); }}
+                  className="flex-[2] bg-[#2D2D49] text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-brand-600 transition-all active:scale-95"
+                >
+                  <Eye size={18} /> Review Details
+                </button>
+                <button 
+                  onClick={() => handleAction(request.id, 'Approved')}
+                  className="flex-1 bg-emerald-500 text-white font-bold py-4 rounded-2xl flex items-center justify-center hover:bg-emerald-600 transition-all active:scale-95 shadow-lg shadow-emerald-200"
+                >
+                  <CheckCircle size={20} />
+                </button>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Approved Requests */}
-      {requests.filter(r => r.status === 'Approved').length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4" style={{ color: '#2D2D49' }}>Recently Approved</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {requests.filter(r => r.status === 'Approved').map((request) => (
-              <div key={request.id} className="bg-white rounded-lg shadow-md p-6 opacity-75">
-                <span
-                  className="px-3 py-1 rounded-full text-sm font-semibold mb-4 inline-block"
-                  style={{ backgroundColor: 'rgba(43, 182, 115, 0.1)', color: '#2BB673' }}
-                >
-                  ✅ Approved
-                </span>
-                <h3 className="text-xl font-bold mb-2" style={{ color: '#2D2D49' }}>
-                  {request.pharmacyName || request.medicineName}
-                </h3>
-                <p className="text-sm" style={{ color: '#1A1A1A' }}>
-                  Approved: {request.submissionDate}
-                </p>
+      {/* Audit Log (Approved Items) */}
+      <section className="pt-10 border-t border-gray-100">
+        <h2 className="text-2xl font-black text-[#2D2D49] mb-6 flex items-center gap-3">
+          <ClipboardCheck className="text-emerald-500" /> 
+          Verified Today
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {requests.filter(r => r.status === 'Approved').map((request) => (
+            <div key={request.id} className="bg-gray-50/50 border border-dashed border-gray-200 rounded-[1.5rem] p-6 flex items-center justify-between">
+              <div>
+                <p className="font-black text-[#2D2D49]">{request.pharmacyName || request.medicineName}</p>
+                <p className="text-xs font-bold text-emerald-600 uppercase mt-1">Activation Complete</p>
               </div>
-            ))}
-          </div>
+              <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+                <CheckCircle size={20} />
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+      </section>
 
-      {/* Details Modal */}
+      {/* --- INSPECTION MODAL --- */}
       {showDetailsModal && selectedRequest && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold" style={{ color: '#2D2D49' }}>Request Details</h3>
-              <button
-                onClick={() => {
-                  setShowDetailsModal(false)
-                  setSelectedRequest(null)
-                }}
-                className="p-1 rounded-lg hover:bg-gray-100"
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-[#2D2D49]/80 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setShowDetailsModal(false)} />
+          
+          <div className="relative bg-white rounded-[3rem] shadow-2xl w-full max-w-3xl overflow-hidden animate-in zoom-in-95 slide-in-from-top-4 duration-300">
+            {/* Modal Header */}
+            <div className="bg-brand-600 p-10 text-white relative">
+              <button 
+                onClick={() => setShowDetailsModal(false)}
+                className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-all"
               >
-                <svg className="w-6 h-6" style={{ color: '#1A1A1A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <XCircle size={24} />
               </button>
+              <p className="text-brand-100 font-black uppercase tracking-[0.2em] text-xs mb-2">Request Verification</p>
+              <h3 className="text-4xl font-black">{selectedRequest.pharmacyName || selectedRequest.medicineName}</h3>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Type</p>
-                <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.type}</p>
+            <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Left Column: Data */}
+              <div className="space-y-6">
+                <InfoGroup icon={<UserCircle size={20} />} label="Owner/Submitter" value={selectedRequest.ownerName || 'System Admin'} />
+                <InfoGroup icon={<Mail size={20} />} label="Official Email" value={selectedRequest.email || 'N/A'} />
+                <InfoGroup icon={<Phone size={20} />} label="Direct Line" value={selectedRequest.phone || 'N/A'} />
+                <InfoGroup icon={<MapPin size={20} />} label="Physical Location" value={selectedRequest.address || 'N/A'} />
               </div>
 
-              {selectedRequest.pharmacyName && (
-                <>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Pharmacy Name</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.pharmacyName}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Owner Name</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.ownerName}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>License Number</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.licenseNumber}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Email</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Phone</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.phone}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Address</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.address}</p>
-                  </div>
-                </>
-              )}
+              {/* Right Column: Meta & Actions */}
+              <div className="bg-gray-50 rounded-[2rem] p-8 space-y-6">
+                <div className="bg-white p-5 rounded-2xl shadow-sm">
+                  <p className="text-xs font-black text-gray-400 uppercase mb-3">Submission Summary</p>
+                  <p className="text-[#2D2D49] font-bold italic leading-relaxed">
+                    {selectedRequest.changes || "Initial registration for a new pharmacy entity in the " + selectedRequest.city + " region."}
+                  </p>
+                </div>
 
-              {selectedRequest.medicineName && (
-                <>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Medicine Name</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.medicineName}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Pharmacy</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.pharmacyName}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Changes</p>
-                    <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.changes}</p>
-                  </div>
-                </>
-              )}
-
-              <div>
-                <p className="text-sm font-medium mb-1" style={{ color: '#1A1A1A' }}>Submission Date</p>
-                <p className="font-semibold" style={{ color: '#2D2D49' }}>{selectedRequest.submissionDate}</p>
-              </div>
-
-              <div className="flex space-x-4 pt-4 border-t" style={{ borderColor: '#E5E7EB' }}>
-                <button
-                  onClick={() => {
-                    handleApprove(selectedRequest.id)
-                    setShowDetailsModal(false)
-                  }}
-                  className="flex-1 py-2 px-4 rounded-lg font-semibold transition-colors"
-                  style={{ 
-                    backgroundColor: '#2BB673',
-                    color: 'white'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#239e5f'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#2BB673'}
-                >
-                  Approve
-                </button>
-                <button
-                  onClick={() => {
-                    handleReject(selectedRequest.id)
-                    setShowDetailsModal(false)
-                  }}
-                  className="flex-1 py-2 px-4 rounded-lg font-semibold border-2 transition-colors"
-                  style={{ 
-                    borderColor: '#EF4444',
-                    color: '#EF4444',
-                    backgroundColor: 'transparent'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                >
-                  Reject
-                </button>
+                <div className="pt-4 space-y-3">
+                  <button 
+                    onClick={() => handleAction(selectedRequest.id, 'Approved')}
+                    className="w-full bg-emerald-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-500/20"
+                  >
+                    Confirm Approval
+                  </button>
+                  <button 
+                    onClick={() => handleAction(selectedRequest.id, 'Rejected')}
+                    className="w-full bg-white text-red-500 border-2 border-red-50 font-black py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-red-50 transition-colors"
+                  >
+                    Decline Request
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -284,7 +211,21 @@ const AdminApprovals = () => {
   )
 }
 
+// Utility components
+const InfoGroup = ({ icon, label, value }) => (
+  <div className="flex gap-4">
+    <div className="w-10 h-10 bg-brand-50 text-brand-500 rounded-xl flex items-center justify-center flex-shrink-0">
+      {icon}
+    </div>
+    <div>
+      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{label}</p>
+      <p className="text-[#2D2D49] font-bold">{value}</p>
+    </div>
+  </div>
+)
+
+const UserCircle = ({ size }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+)
+
 export default AdminApprovals
-
-
-

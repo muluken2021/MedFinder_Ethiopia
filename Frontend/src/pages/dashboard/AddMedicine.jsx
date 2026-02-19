@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { PlusCircle, Calendar, Tag, Package, CreditCard, ChevronLeft, AlertCircle } from 'lucide-react'
 
 const AddMedicine = () => {
   const navigate = useNavigate()
   const [showSuccess, setShowSuccess] = useState(false)
-  const [errorMsg,setErrorMsg] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("")
+  
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -15,278 +18,218 @@ const AddMedicine = () => {
   })
 
   const categories = [
-    'Pain Relief',
-    'Antibiotic',
-    'Diabetes',
-    'Cardiovascular',
-    'Digestive',
-    'Respiratory',
-    'Vitamins',
-    'Other'
+    'Pain Relief', 'Antibiotic', 'Diabetes', 'Cardiovascular', 
+    'Digestive', 'Respiratory', 'Vitamins', 'Other'
   ]
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value
-    })
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setErrorMsg("");
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMsg("")
+    setIsSubmitting(true)
 
-  try {
-    const token = localStorage.getItem("token"); // pharmacy JWT
+    try {
+      const token = localStorage.getItem("token")
+      const res = await fetch("http://localhost:5000/api/medicines/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          price: parseFloat(formData.price),
+          quantity: parseInt(formData.quantity)
+        })
+      })
 
-    const res = await fetch("http://localhost:5000/api/medicines/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(formData)
-    });
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || "Failed to add medicine")
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      setErrorMsg(data.message || "Failed to add medicine");
-      return;
+      setShowSuccess(true)
+      setTimeout(() => navigate("/dashboard/medicines"), 2000)
+    } catch (err) {
+      setErrorMsg(err.message || "Network error. Try again!")
+    } finally {
+      setIsSubmitting(false)
     }
-
-    console.log("Saved:", data);
-    setShowSuccess(true);
-
-    setTimeout(() => {
-      navigate("/dashboard/medicines");
-    }, 2000);
-
-  } catch (err) {
-    console.error(err);
-    setErrorMsg("Network error. Try again!");
   }
-};
 
+  const today = new Date().toISOString().split('T')[0]
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2" style={{ color: '#2D2D49' }}>Add New Medicine</h1>
-        <p style={{ color: '#1A1A1A' }}>Add a new medicine to your pharmacy inventory</p>
-      </div>
+    <div className="min-h-screen bg-[#F8FAFC] py-12 px-6">
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Navigation & Header */}
+        <button 
+          onClick={() => navigate('/dashboard/medicines')}
+          className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-semibold mb-6 transition-colors"
+        >
+          <ChevronLeft size={20} /> Back to Inventory
+        </button>
 
-      {/* Success Alert */}
-      {showSuccess && (
-        <div className="mb-6 p-4 rounded-lg flex items-center space-x-3" style={{ backgroundColor: 'rgba(43, 182, 115, 0.1)', borderLeft: '4px solid #2BB673' }}>
-          <svg className="w-6 h-6 flex-shrink-0" style={{ color: '#2BB673' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
           <div>
-            <p className="font-semibold" style={{ color: '#2BB673' }}>Success!</p>
-            <p className="text-sm" style={{ color: '#1A1A1A' }}>Medicine added successfully. Redirecting...</p>
+            <h1 className="text-4xl font-extrabold text-[#2D2D49] tracking-tight">
+              Register <span className="text-blue-600">Stock</span>
+            </h1>
+            <p className="text-gray-500 font-medium mt-1">Update your pharmacy's digital shelf for patients.</p>
           </div>
         </div>
-      )}
 
-      {/* Form Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Main Form Entry */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 p-8 md:p-10">
+              {errorMsg && (
+                <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-2xl flex items-center gap-3 text-red-700 font-medium">
+                  <AlertCircle size={20} /> {errorMsg}
+                </div>
+              )}
 
-      <div className="bg-white rounded-lg shadow-md p-8">
-        {errorMsg && (
-            <div className="mb-4 p-4 bg-red-100 border-l-4 border-red-500 rounded">
-              <p className="text-red-700 font-semibold">{errorMsg}</p>
-            </div>
-          )}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Medicine Name */}
-          <div>
-            <label htmlFor="name" className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>
-              Medicine Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-              onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-              placeholder="e.g., Paracetamol 500mg"
-            />
-          </div>
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <section>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-blue-600 mb-6 flex items-center gap-2">
+                    <Package size={16} /> Basic Information
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="md:col-span-2">
+                      <FormInput 
+                        label="Medicine Name" 
+                        name="name" 
+                        value={formData.name} 
+                        onChange={handleChange} 
+                        placeholder="e.g., Metformin 500mg" 
+                      />
+                    </div>
+                    <FormSelect 
+                      label="Category" 
+                      name="category" 
+                      value={formData.category} 
+                      options={categories} 
+                      onChange={handleChange} 
+                    />
+                    <FormInput 
+                      label="Price (ETB)" 
+                      name="price" 
+                      type="number" 
+                      value={formData.price} 
+                      onChange={handleChange} 
+                      placeholder="0.00" 
+                    />
+                  </div>
+                </section>
 
-          {/* Category */}
-          <div>
-            <label htmlFor="category" className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>
-              Category <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB',
-                backgroundColor: 'white'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-              onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-            >
-              <option value="">Select Category</option>
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
+                <section>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-blue-600 mb-6 flex items-center gap-2">
+                    <Calendar size={16} /> Supply & Expiry
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormInput 
+                      label="Stock Quantity" 
+                      name="quantity" 
+                      type="number" 
+                      value={formData.quantity} 
+                      onChange={handleChange} 
+                      placeholder="Total units" 
+                    />
+                    <FormInput 
+                      label="Expiry Date" 
+                      name="expiryDate" 
+                      type="date" 
+                      min={today}
+                      value={formData.expiryDate} 
+                      onChange={handleChange} 
+                    />
+                  </div>
+                </section>
 
-          {/* Price and Quantity Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Price */}
-            <div>
-              <label htmlFor="price" className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>
-                Price (ETB) <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                required
-                min="0"
-                step="0.01"
-                className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                style={{ 
-                  color: '#1A1A1A',
-                  borderColor: '#E5E7EB'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                placeholder="0.00"
-              />
-            </div>
-
-            {/* Quantity */}
-            <div>
-              <label htmlFor="quantity" className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>
-                Quantity <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                id="quantity"
-                name="quantity"
-                value={formData.quantity}
-                onChange={handleChange}
-                required
-                min="0"
-                className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                style={{ 
-                  color: '#1A1A1A',
-                  borderColor: '#E5E7EB'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                placeholder="0"
-              />
+                <div className="flex items-center gap-4 pt-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || showSuccess}
+                    className="flex-1 py-4 px-8 rounded-2xl font-bold text-white shadow-lg shadow-blue-200 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+                    style={{ backgroundColor: '#2BB673' }}
+                  >
+                    {isSubmitting ? "Adding to System..." : showSuccess ? "Success!" : "Confirm & Save"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
 
-          {/* Expiry Date and Status Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Expiry Date */}
-            <div>
-              <label htmlFor="expiryDate" className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>
-                Expiry Date <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="expiryDate"
-                name="expiryDate"
-                value={formData.expiryDate}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                style={{ 
-                  color: '#1A1A1A',
-                  borderColor: '#E5E7EB'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-              />
-            </div>
-
-            {/* Availability Status */}
-            <div>
-              <label htmlFor="status" className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>
-                Availability Status <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="status"
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-                style={{ 
-                  color: '#1A1A1A',
-                  borderColor: '#E5E7EB',
-                  backgroundColor: 'white'
-                }}
-                onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-              >
-                <option value="available">Available</option>
-                <option value="out-of-stock">Out of Stock</option>
-              </select>
+          {/* Right: Live Preview Card */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8 space-y-6">
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-blue-200 overflow-hidden relative">
+                <div className="relative z-10">
+                  <h3 className="font-bold text-blue-100 uppercase tracking-widest text-xs mb-4">Live Inventory Preview</h3>
+                  <div className="text-2xl font-black mb-1">{formData.name || "Medicine Name"}</div>
+                  <div className="text-blue-100 font-medium mb-6">{formData.category || "General Category"}</div>
+                  
+                  <div className="space-y-4">
+                    <PreviewRow icon={<CreditCard size={18}/>} label="Price" value={`${formData.price || '0'} ETB`} />
+                    <PreviewRow icon={<Package size={18}/>} label="Stock" value={`${formData.quantity || '0'} Units`} />
+                    <PreviewRow icon={<Calendar size={18}/>} label="Expires" value={formData.expiryDate || 'Not set'} />
+                  </div>
+                </div>
+                <div className="absolute -bottom-10 -right-10 opacity-10">
+                  <PlusCircle size={200} />
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+                <p className="text-sm text-gray-500 font-medium leading-relaxed">
+                  <span className="text-blue-600 font-bold">Pro-tip:</span> Ensure you double-check the expiry date. System alerts will be sent to patients if stock is near expiry.
+                </p>
+              </div>
             </div>
           </div>
-
-          {/* Submit Button */}
-          <div className="flex space-x-4 pt-4">
-            <button
-              type="submit"
-              className="flex-1 py-3 px-6 rounded-lg font-semibold transition-colors"
-              style={{ 
-                backgroundColor: '#2BB673',
-                color: 'white'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#239e5f'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = '#2BB673'}
-            >
-              Save Medicine
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/dashboard/medicines')}
-              className="px-6 py-3 rounded-lg font-semibold border-2 transition-colors"
-              style={{ 
-                borderColor: '#E5E7EB',
-                color: '#1A1A1A',
-                backgroundColor: 'transparent'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#F6F8FA'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   )
 }
 
+// Custom Styled Components
+const FormInput = ({ label, ...props }) => (
+  <div className="space-y-2">
+    <label className="block text-sm font-bold text-[#2D2D49] ml-1">{label}</label>
+    <input
+      {...props}
+      required
+      className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-transparent outline-none focus:border-blue-600/20 focus:bg-white transition-all font-medium text-[#1A1A1A] placeholder:text-gray-300"
+    />
+  </div>
+)
+
+const FormSelect = ({ label, options, ...props }) => (
+  <div className="space-y-2">
+    <label className="block text-sm font-bold text-[#2D2D49] ml-1">{label}</label>
+    <select
+      {...props}
+      required
+      className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-transparent outline-none focus:border-blue-600/20 focus:bg-white transition-all font-medium text-[#1A1A1A] appearance-none"
+    >
+      <option value="">Choose category</option>
+      {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+    </select>
+  </div>
+)
+
+const PreviewRow = ({ icon, label, value }) => (
+  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+    <div className="flex items-center gap-2 text-sm text-blue-100">
+      {icon} <span>{label}</span>
+    </div>
+    <div className="font-bold">{value}</div>
+  </div>
+)
+
 export default AddMedicine
-
-
-

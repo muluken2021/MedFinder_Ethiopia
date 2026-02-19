@@ -1,6 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import { 
+  LayoutDashboard, 
+  Store, 
+  Pill, 
+  Users, 
+  ClipboardCheck, 
+  BarChart3, 
+  Settings, 
+  LogOut, 
+  Search, 
+  Bell, 
+  ChevronLeft, 
+  ChevronRight,
+  UserCircle
+} from 'lucide-react'
 
 const AdminDashboardLayout = ({ children }) => {
   const { theme } = useTheme()
@@ -12,260 +27,175 @@ const AdminDashboardLayout = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState('')
 
   const menuItems = [
-    { path: '/admin', label: 'Dashboard Overview', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { path: '/admin/pharmacies', label: 'Pharmacies', icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z' },
-    { path: '/admin/medicines', label: 'Medicines', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-    { path: '/admin/users', label: 'Users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-    { path: '/admin/approvals', label: 'Approvals', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
-    { path: '/admin/reports', label: 'Reports', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-    { path: '/admin/settings', label: 'Settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' },
+    { path: '/admin', label: 'Overview', icon: <LayoutDashboard size={20} /> },
+    { path: '/admin/pharmacies', label: 'Pharmacies', icon: <Store size={20} /> },
+    { path: '/admin/medicines', label: 'Inventory', icon: <Pill size={20} /> },
+    { path: '/admin/users', label: 'User Management', icon: <Users size={20} /> },
+    { path: '/admin/approvals', label: 'Pending Approvals', icon: <ClipboardCheck size={20} /> },
+    { path: '/admin/reports', label: 'Analytics', icon: <BarChart3 size={20} /> },
+    { path: '/admin/settings', label: 'System Settings', icon: <Settings size={20} /> },
   ]
 
   const isActive = (path) => {
-    if (path === '/admin') {
-      return location.pathname === '/admin'
-    }
-    return location.pathname.startsWith(path)
-  }
-
-  const handleLogout = () => {
-    navigate('/')
-    setShowLogoutModal(false)
-  }
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    // In a real app, this would perform a search
-    console.log('Searching for:', searchQuery)
+    return path === '/admin' ? location.pathname === '/admin' : location.pathname.startsWith(path)
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: theme.background }}>
-      {/* Sidebar */}
-      <div className={`fixed left-0 top-0 h-full transition-all duration-300 z-30 ${sidebarOpen ? 'w-64' : 'w-20'}`} style={{ backgroundColor: theme.primary }}>
-        <div className="flex flex-col h-full">
-          {/* Logo Section */}
-          <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-            {sidebarOpen && (
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <span className="text-white font-bold text-lg">MedFinder</span>
+    <div className="min-h-screen flex font-sans" style={{ backgroundColor: '#F8FAFC' }}>
+      
+      {/* --- Sidebar Component --- */}
+      <aside 
+        className={`fixed left-0 top-0 h-full transition-all duration-500 ease-in-out z-40 flex flex-col shadow-2xl ${sidebarOpen ? 'w-72' : 'w-24'}`}
+        style={{ backgroundColor: '#2D2D49' }}
+      >
+        {/* Logo Section */}
+        <div className="h-20 flex items-center justify-between px-6 border-b border-white/5">
+          {sidebarOpen && (
+            <div className="flex items-center gap-3 animate-in fade-in zoom-in duration-500">
+              <div className="w-10 h-10 bg-brand-600 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-900/40">
+                <Pill className="text-white" size={22} />
               </div>
-            )}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="cursor-pointer p-2 rounded-lg hover:bg-white text-white hover:text-black hover:bg-opacity-10 transition-colors"
-            >
-              <svg className="w-5 h-5 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {sidebarOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                )}
-              </svg>
-            </button>
-          </div>
-
-          {/* Navigation Menu */}
-          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            {menuItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive(item.path)
-                    ? 'bg-white bg-opacity-20 text-black'
-                    : 'text-white text-opacity-70 hover:bg-white hover:bg-opacity-10 hover:text-black'
-                }`}
-                title={!sidebarOpen ? item.label : ''}
-              >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-                </svg>
-                {sidebarOpen && <span className="font-medium">{item.label}</span>}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Logout Button */}
-          <div className="p-4 border-t" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-            <button
-              onClick={() => setShowLogoutModal(true)}
-              className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-white text-opacity-70 hover:bg-white hover:bg-opacity-10 hover:text-black transition-colors"
-              title={!sidebarOpen ? 'Logout' : ''}
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              {sidebarOpen && <span className="font-medium">Logout</span>}
-            </button>
-          </div>
+              <span className="text-white font-black text-xl tracking-tighter">MedFinder</span>
+            </div>
+          )}
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className={`p-2 rounded-xl bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition-all ${!sidebarOpen && 'mx-auto'}`}
+          >
+            {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+          </button>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className={`transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-20'}`}>
-        {/* Top Navbar */}
-        <nav className="sticky top-0 z-20 bg-white shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center space-x-4 flex-1">
-              <h2 className="text-2xl font-bold hidden md:block" style={{ color: '#2D2D49' }}>
-                MedFinder Ethiopia Admin
-              </h2>
-              
-              {/* Search Bar */}
-              <form onSubmit={handleSearch} className="flex-1 max-w-md">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search pharmacy, medicine, or user..."
-                    className="w-full px-4 py-2 pl-10 rounded-lg border-2 outline-none transition-colors"
-                    style={{ 
-                      color: '#1A1A1A',
-                      borderColor: '#E5E7EB'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = theme.primary}
-                    onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-                  />
-                  <svg className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2" style={{ color: '#1A1A1A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-              </form>
-            </div>
-
-            {/* Right Section */}
-            <div className="flex items-center space-x-4">
-              {/* Notification Bell */}
-              <button className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <svg className="w-6 h-6" style={{ color: '#1A1A1A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                <span className="absolute top-0 right-0 w-3 h-3 rounded-full" style={{ backgroundColor: '#EF4444' }}></span>
-              </button>
-
-              {/* Profile Section */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                  className="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: theme.primary, color: theme.text, fontWeight: 'bold' }}>
-                    A
-                  </div>
-                  <div className="text-left hidden md:block">
-                    <p className="text-sm font-semibold" style={{ color: '#2D2D49' }}>Admin</p>
-                    <p className="text-xs" style={{ color: '#1A1A1A' }}>System Administrator</p>
-                  </div>
-                  <svg className="w-4 h-4" style={{ color: '#1A1A1A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {/* Profile Dropdown */}
-                {showProfileDropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <Link
-                      to="/admin/settings"
-                      className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                      style={{ color: '#1A1A1A' }}
-                      onClick={() => setShowProfileDropdown(false)}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Settings</span>
-                      </div>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setShowProfileDropdown(false)
-                        setShowLogoutModal(true)
-                      }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
-                      style={{ color: '#1A1A1A' }}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        <span>Logout</span>
-                      </div>
-                    </button>
-                  </div>
-                )}
+        {/* Navigation Menu */}
+        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto no-scrollbar">
+          {menuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group relative ${
+                isActive(item.path)
+                  ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20'
+                  : 'text-white/50 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className={`${isActive(item.path) ? 'text-white' : 'group-hover:text-brand-400'} transition-colors`}>
+                {item.icon}
               </div>
-            </div>
-          </div>
+              {sidebarOpen && <span className="font-bold text-sm tracking-wide">{item.label}</span>}
+              {!sidebarOpen && (
+                <div className="absolute left-20 bg-[#2D2D49] text-white px-3 py-1 rounded-md text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-xl border border-white/10">
+                  {item.label}
+                </div>
+              )}
+            </Link>
+          ))}
         </nav>
 
-        {/* Page Content */}
-        <main className="p-6">
-          {children}
-        </main>
-      </div>
+        {/* Bottom Section */}
+        <div className="p-4 border-t border-white/5">
+          <button 
+            onClick={() => setShowLogoutModal(true)}
+            className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-red-400 hover:bg-red-500/10 transition-all group"
+          >
+            <LogOut size={20} />
+            {sidebarOpen && <span className="font-black text-sm uppercase tracking-widest">Sign Out</span>}
+          </button>
+        </div>
+      </aside>
 
-      {/* Logout Confirmation Modal */}
-      {showLogoutModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-4" style={{ color: '#2D2D49' }}>
-              Confirm Logout
-            </h3>
-            <p className="mb-6" style={{ color: '#1A1A1A' }}>
-              Are you sure you want to log out?
-            </p>
-            <div className="flex space-x-4">
-              <button
-                onClick={handleLogout}
-                className="flex-1 py-2 px-4 rounded-lg font-semibold transition-colors"
-                style={{ 
-                  backgroundColor: theme.primary,
-                  color: theme.text
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = theme.secondary}
-                onMouseLeave={(e) => e.target.style.backgroundColor = theme.primary}
+      {/* --- Main Workspace --- */}
+      <main className={`flex-1 flex flex-col transition-all duration-500 ${sidebarOpen ? 'ml-72' : 'ml-24'}`}>
+        
+        {/* Top Floating Navbar */}
+        <header className="h-20 bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-gray-100 px-8 flex items-center justify-between">
+          <div className="flex items-center gap-8 flex-1">
+            <h2 className="text-lg font-black text-[#2D2D49] hidden lg:block uppercase tracking-wider">
+              Admin <span className="text-brand-600">Console</span>
+            </h2>
+
+            {/* Global Command/Search */}
+            <div className="relative max-w-md w-full group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-600 transition-colors" size={18} />
+              <input 
+                type="text"
+                placeholder="Type 'ctrl + k' to search..."
+                className="w-full bg-gray-100/50 border-none rounded-2xl py-2.5 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-brand-500/20 focus:bg-white transition-all outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            {/* Notifications */}
+            <button className="relative p-2.5 text-gray-500 hover:bg-gray-100 rounded-xl transition-all">
+              <Bell size={22} />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+
+            {/* Profile Menu */}
+            <div className="relative">
+              <button 
+                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                className="flex items-center gap-3 pl-2 pr-4 py-1.5 bg-gray-50 rounded-2xl border border-gray-100 hover:border-brand-200 transition-all group"
               >
-                Yes
+                <div className="w-9 h-9 bg-[#2D2D49] rounded-xl flex items-center justify-center text-white text-xs font-black shadow-md">
+                  AD
+                </div>
+                <div className="text-left hidden sm:block">
+                  <p className="text-xs font-black text-[#2D2D49] leading-none">Abebe B.</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter mt-1">Super Admin</p>
+                </div>
               </button>
-              <button
-                onClick={() => setShowLogoutModal(false)}
-                className="flex-1 py-2 px-4 rounded-lg font-semibold border-2 transition-colors"
-                style={{ 
-                  borderColor: '#E5E7EB',
-                  color: '#1A1A1A',
-                  backgroundColor: 'transparent'
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#F6F8FA'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              
+              {/* Dropdown Menu */}
+              {showProfileDropdown && (
+                <div className="absolute right-0 mt-3 w-56 bg-white rounded-[2rem] shadow-2xl border border-gray-100 p-2 animate-in slide-in-from-top-2 duration-300">
+                  <Link to="/admin/settings" className="flex items-center gap-3 px-4 py-3 hover:bg-brand-50 rounded-2xl text-gray-700 font-bold text-sm transition-colors">
+                    <UserCircle size={18} className="text-brand-500" /> Account Details
+                  </Link>
+                  <button onClick={() => setShowLogoutModal(true)} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 rounded-2xl text-red-600 font-bold text-sm transition-colors">
+                    <LogOut size={18} /> Exit System
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* Dynamic Page Content */}
+        <section className="p-8 max-w-[1600px] mx-auto w-full">
+          {children}
+        </section>
+      </main>
+
+      {/* --- Logout Modal --- */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-[#2D2D49]/40 backdrop-blur-sm" onClick={() => setShowLogoutModal(false)} />
+          <div className="relative bg-white rounded-[3rem] shadow-2xl max-w-sm w-full p-10 text-center animate-in zoom-in-95 duration-300">
+            <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <LogOut size={32} />
+            </div>
+            <h3 className="text-2xl font-black text-[#2D2D49] mb-2">End Session?</h3>
+            <p className="text-gray-500 font-medium mb-8">You will need to re-authenticate to access the admin panel.</p>
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={() => navigate('/')}
+                className="w-full py-4 bg-red-500 text-white rounded-2xl font-black shadow-lg shadow-red-500/30 hover:bg-red-600 transition-all active:scale-95"
               >
-                Cancel
+                Log Me Out
+              </button>
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                className="w-full py-4 bg-gray-100 text-gray-500 rounded-2xl font-black hover:bg-gray-200 transition-all"
+              >
+                Stay Logged In
               </button>
             </div>
           </div>
         </div>
-      )}
-
-      {/* Close dropdown when clicking outside */}
-      {showProfileDropdown && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowProfileDropdown(false)}
-        ></div>
       )}
     </div>
   )
 }
 
 export default AdminDashboardLayout
-
-

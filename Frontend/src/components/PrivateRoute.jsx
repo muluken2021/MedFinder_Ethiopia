@@ -5,7 +5,7 @@ const PrivateRoute = ({ children, role }) => {
   // Get token and user role from localStorage or context
   const token = localStorage.getItem('token'); // token saved after login
   // const userRole = localStorage.getItem('role'); // 'admin' or 'pharmacy'
-  const userRole= "pharmacy"
+  const userRole= "admin"
   
   
   // if (!token) {

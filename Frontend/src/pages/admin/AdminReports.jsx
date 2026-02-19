@@ -1,4 +1,13 @@
 import React from 'react'
+import { 
+  BarChart3, 
+  TrendingUp, 
+  Map, 
+  Medal, 
+  Search, 
+  ArrowUpRight, 
+  Star 
+} from 'lucide-react'
 
 const AdminReports = () => {
   // Mock data
@@ -36,128 +45,144 @@ const AdminReports = () => {
   ]
 
   const maxPharmacy = Math.max(...monthlySignups.map(m => m.pharmacies))
-  const maxUser = Math.max(...monthlySignups.map(m => m.users))
+  const maxSearches = mostSearched[0].searches
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2" style={{ color: '#2D2D49' }}>Reports & Analytics</h1>
-        <p style={{ color: '#1A1A1A' }}>Platform insights and performance metrics</p>
+    <div className="space-y-10 animate-in fade-in duration-700">
+      
+      {/* Header with Export Action */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-black text-[#2D2D49] tracking-tight">Performance <span className="text-emerald-500">Insights</span></h1>
+          <p className="text-gray-500 font-medium mt-1">Detailed analysis of platform growth and consumer behavior.</p>
+        </div>
+        <button className="bg-white border-2 border-gray-100 text-[#2D2D49] font-bold px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-gray-50 transition-all shadow-sm">
+          <ArrowUpRight size={18} className="text-emerald-500" />
+          Export PDF Report
+        </button>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Monthly Sign-ups Chart */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#2D2D49' }}>
-            Monthly Pharmacy Sign-ups
-          </h2>
-          <div className="space-y-4">
-            {monthlySignups.map((item, index) => (
-              <div key={index}>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium" style={{ color: '#1A1A1A' }}>{item.month}</span>
-                  <span className="text-sm font-bold" style={{ color: '#2D2D49' }}>{item.pharmacies}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                  <div
-                    className="h-4 rounded-full transition-all duration-500"
-                    style={{ 
-                      width: `${(item.pharmacies / maxPharmacy) * 100}%`,
-                      backgroundColor: '#0B6B6B'
-                    }}
-                  ></div>
-                </div>
+      {/* Primary Analytics Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Growth Chart - Take up 7/12 columns */}
+        <div className="lg:col-span-7 bg-white rounded-[2.5rem] shadow-xl shadow-brand-900/5 border border-gray-100 p-8">
+          <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+                <BarChart3 size={24} />
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Most Searched Medicines */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#2D2D49' }}>
-            Most Searched Medicines
-          </h2>
-          <div className="space-y-4">
-            {mostSearched.map((item, index) => (
-              <div key={index}>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium" style={{ color: '#1A1A1A' }}>{item.name}</span>
-                  <span className="text-sm font-bold" style={{ color: '#2D2D49' }}>{item.searches.toLocaleString()}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div
-                    className="h-3 rounded-full transition-all duration-500"
-                    style={{ 
-                      width: `${(item.searches / mostSearched[0].searches) * 100}%`,
-                      backgroundColor: '#2BB673'
-                    }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Most Active Cities */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-bold mb-6" style={{ color: '#2D2D49' }}>
-          Most Active Cities
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          {activeCities.map((item, index) => (
-            <div key={index} className="text-center">
-              <div className="w-20 h-20 mx-auto mb-2 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(11, 107, 107, 0.1)' }}>
-                <span className="text-2xl font-bold" style={{ color: '#0B6B6B' }}>{item.activity}</span>
-              </div>
-              <p className="text-sm font-semibold" style={{ color: '#2D2D49' }}>{item.city}</p>
-              <p className="text-xs" style={{ color: '#1A1A1A' }}>{item.activity}% activity</p>
+              <h2 className="text-2xl font-black text-[#2D2D49]">Pharmacy Growth</h2>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Summary Widgets */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top 5 Medicines */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#2D2D49' }}>
-            Top 5 Medicines
-          </h2>
-          <div className="space-y-3">
-            {mostSearched.map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: '#F6F8FA' }}>
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(11, 107, 107, 0.1)' }}>
-                    <span className="text-sm font-bold" style={{ color: '#0B6B6B' }}>{index + 1}</span>
+            <div className="text-right">
+              <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Growth Rate</span>
+              <p className="text-emerald-500 font-black">+24%</p>
+            </div>
+          </div>
+          
+          <div className="flex items-end justify-between h-48 gap-2 px-2">
+            {monthlySignups.map((item, index) => (
+              <div key={index} className="flex-1 flex flex-col items-center group">
+                <div 
+                  className="w-full max-w-[40px] bg-gradient-to-t from-emerald-500 to-teal-400 rounded-t-xl transition-all duration-700 group-hover:brightness-110 relative"
+                  style={{ height: `${(item.pharmacies / maxPharmacy) * 100}%` }}
+                >
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-[#2D2D49] text-white text-[10px] font-bold py-1 px-2 rounded">
+                    {item.pharmacies}
                   </div>
-                  <span className="font-medium" style={{ color: '#2D2D49' }}>{item.name}</span>
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>{item.searches.toLocaleString()} searches</span>
+                <span className="mt-4 text-xs font-bold text-gray-400 uppercase">{item.month}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Top 5 Pharmacies */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6" style={{ color: '#2D2D49' }}>
-            Top 5 Pharmacies
+        {/* Most Searched - Take up 5/12 columns */}
+        <div className="lg:col-span-5 bg-[#2D2D49] rounded-[2.5rem] shadow-xl p-8 text-white">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-3 bg-white/10 text-emerald-400 rounded-2xl">
+              <Search size={24} />
+            </div>
+            <h2 className="text-2xl font-black">Top Searches</h2>
+          </div>
+          
+          <div className="space-y-5">
+            {mostSearched.map((item, index) => (
+              <div key={index} className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium text-gray-300">{item.name}</span>
+                  <span className="font-black text-emerald-400">{item.searches.toLocaleString()}</span>
+                </div>
+                <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                  <div 
+                    className="h-full bg-emerald-500 rounded-full transition-all duration-1000"
+                    style={{ width: `${(item.searches / maxSearches) * 100}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Geographic & Leaderboard Section */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        
+        {/* City Activity - Using the 1st column */}
+        <div className="bg-white rounded-[2.5rem] shadow-xl shadow-brand-900/5 border border-gray-100 p-8">
+          <h2 className="text-xl font-black text-[#2D2D49] mb-8 flex items-center gap-2">
+            <Map size={20} className="text-violet-500" /> Regional Pulse
           </h2>
-          <div className="space-y-3">
-            {topPharmacies.map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg" style={{ backgroundColor: '#F6F8FA' }}>
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(43, 182, 115, 0.1)' }}>
-                    <span className="text-sm font-bold" style={{ color: '#2BB673' }}>{index + 1}</span>
+          <div className="space-y-6">
+            {activeCities.slice(0, 4).map((item, index) => (
+              <div key={index} className="flex items-center justify-between group">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-violet-50 flex items-center justify-center text-violet-600 font-black">
+                    {index + 1}
                   </div>
                   <div>
-                    <span className="font-medium block" style={{ color: '#2D2D49' }}>{item.name}</span>
-                    <span className="text-xs" style={{ color: '#1A1A1A' }}>⭐ {item.rating}</span>
+                    <p className="font-bold text-[#2D2D49]">{item.city}</p>
+                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{item.activity}% Volume</p>
                   </div>
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>{item.orders} orders</span>
+                <div className={`w-2 h-2 rounded-full ${index === 0 ? 'bg-emerald-500 animate-pulse' : 'bg-gray-200'}`} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Top Pharmacies - Spans 2 columns on large screens */}
+        <div className="xl:col-span-2 bg-white rounded-[2.5rem] shadow-xl shadow-brand-900/5 border border-gray-100 overflow-hidden">
+          <div className="p-8 border-b border-gray-50 flex items-center justify-between">
+            <h2 className="text-xl font-black text-[#2D2D49] flex items-center gap-2">
+              <Medal size={20} className="text-amber-500" /> Leading Partners
+            </h2>
+            <TrendingUp size={20} className="text-gray-300" />
+          </div>
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {topPharmacies.slice(0, 4).map((item, index) => (
+              <div key={index} className="flex items-center justify-between p-5 rounded-3xl bg-gray-50/50 hover:bg-white hover:shadow-lg hover:shadow-brand-900/5 transition-all group">
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <div className="w-14 h-14 bg-white rounded-2xl border-2 border-gray-100 flex items-center justify-center text-xl font-black text-[#2D2D49]">
+                      {item.name[0]}
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 bg-amber-400 text-white p-1 rounded-lg">
+                      <Star size={10} fill="currentColor" />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="font-black text-[#2D2D49] text-sm">{item.name}</p>
+                    <div className="flex items-center gap-3 mt-1">
+                       <span className="text-[10px] font-black bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md uppercase">
+                         {item.orders} Orders
+                       </span>
+                       <span className="text-[10px] font-black text-gray-400">
+                         {item.rating} Rating
+                       </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -168,6 +193,3 @@ const AdminReports = () => {
 }
 
 export default AdminReports
-
-
-

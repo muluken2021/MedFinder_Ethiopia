@@ -1,231 +1,196 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useTheme } from '../context/ThemeContext'
+import { 
+  LayoutDashboard, 
+  Pill, 
+  PlusSquare, 
+  UserCircle, 
+  LogOut, 
+  ChevronLeft, 
+  ChevronRight,
+  Bell,
+  Settings,
+  Search
+} from 'lucide-react'
 
 const DashboardLayout = ({ children }) => {
-  const { theme } = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
 
-  // Mock pharmacy data
   const pharmacyName = 'Central Pharmacy'
 
   const menuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { path: '/dashboard/medicines', label: 'Medicines', icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z' },
-    { path: '/dashboard/add-medicine', label: 'Add Medicine', icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6' },
-    { path: '/dashboard/profile', label: 'Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
+    { path: '/dashboard', label: 'Overview', icon: <LayoutDashboard size={22} /> },
+    { path: '/dashboard/medicines', label: 'Inventory', icon: <Pill size={22} /> },
+    { path: '/dashboard/add-medicine', label: 'Add Stock', icon: <PlusSquare size={22} /> },
+    { path: '/dashboard/profile', label: 'Pharmacy Profile', icon: <UserCircle size={22} /> },
   ]
 
   const isActive = (path) => {
-    if (path === '/dashboard') {
-      return location.pathname === '/dashboard'
-    }
-    return location.pathname.startsWith(path)
-  }
-
-  const handleLogout = () => {
-    // In a real app, this would clear authentication tokens
-    navigate('/')
-    setShowLogoutModal(false)
+    return path === '/dashboard' 
+      ? location.pathname === '/dashboard' 
+      : location.pathname.startsWith(path)
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: theme.background }}>
-      {/* Sidebar */}
-      <div className={`fixed left-0 top-0 h-full transition-all duration-300 z-30 ${sidebarOpen ? 'w-64' : 'w-20'}`} style={{ backgroundColor: theme.primary }}>
+    <div className="min-h-screen bg-[#F8FAFC] flex">
+      {/* --- SIDEBAR --- */}
+      <aside 
+        className={`fixed left-0 top-0 h-full z-40 transition-all duration-500 ease-in-out border-r border-white/10 shadow-2xl ${
+          sidebarOpen ? 'w-72' : 'w-24'
+        }`}
+        style={{ backgroundColor: '#2D2D49' }}
+      >
         <div className="flex flex-col h-full">
-          {/* Logo Section */}
-          <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+          {/* Brand Logo Area */}
+          <div className="h-24 flex items-center justify-between px-6 border-b border-white/5">
             {sidebarOpen && (
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: theme.secondary }}>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+              <div className="flex items-center gap-3 animate-in fade-in duration-500">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-900/50">
+                  <Pill className="text-white" size={24} />
                 </div>
-                <span className="text-white font-bold text-lg">MedFinder</span>
+                <span className="text-xl font-black text-white tracking-tight">MedFinder</span>
               </div>
             )}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="cursor-pointer p-2 rounded-lg hover:bg-white text-white hover:text-black hover:bg-opacity-10 transition-colors"
+              className="p-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white transition-all mx-auto"
             >
-              <svg className="w-5 h-5 hover:text-black " fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {sidebarOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                )}
-              </svg>
+              {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
             </button>
           </div>
 
-          {/* Navigation Menu */}
-          <nav className="flex-1 p-4 space-y-2">
+          {/* Nav Links */}
+          <nav className="flex-1 px-4 py-8 space-y-2">
             {menuItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${
                   isActive(item.path)
-                    ? 'bg-white bg-opacity-20 text-black'
-                    : 'text-white text-opacity-70 hover:bg-white hover:bg-opacity-10 hover:text-black'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
                 }`}
-                title={!sidebarOpen ? item.label : ''}
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-                </svg>
-                {sidebarOpen && <span className="font-medium">{item.label}</span>}
+                <div className={`${isActive(item.path) ? 'scale-110' : 'group-hover:scale-110'} transition-transform`}>
+                  {item.icon}
+                </div>
+                {sidebarOpen && <span className="font-bold tracking-wide">{item.label}</span>}
               </Link>
             ))}
           </nav>
 
-          {/* Logout Button */}
-          <div className="p-4 border-t" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+          {/* Bottom Actions */}
+          <div className="p-4 border-t border-white/5 space-y-2">
             <button
               onClick={() => setShowLogoutModal(true)}
-              className="cursor-pointer w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-white text-opacity-70 hover:bg-white hover:bg-opacity-10 hover:text-black transition-colors"
-              title={!sidebarOpen ? 'Logout' : ''}
+              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-red-400 hover:bg-red-500/10 transition-all group"
             >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              {sidebarOpen && <span className="font-medium">Logout</span>}
+              <LogOut size={22} className="group-hover:translate-x-1 transition-transform" />
+              {sidebarOpen && <span className="font-bold">Sign Out</span>}
             </button>
           </div>
         </div>
-      </div>
+      </aside>
 
-      {/* Main Content */}
-      <div className={`transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-20'}`}>
-        {/* Top Navbar */}
-        <nav className="sticky top-0 z-20 bg-white shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center space-x-4">
-              <h2 className="text-2xl font-bold" style={{ color: '#2D2D49' }}>
-                Pharmacy Dashboard
-              </h2>
-            </div>
+      {/* --- MAIN CONTENT AREA --- */}
+      <div className={`flex-1 transition-all duration-500 ${sidebarOpen ? 'pl-72' : 'pl-24'}`}>
+        
+        {/* Top Header */}
+        <header className="sticky top-0 z-30 bg-[#F8FAFC]/80 backdrop-blur-md px-8 py-4 flex items-center justify-between border-b border-gray-100">
+          <div className="flex items-center gap-4 bg-white px-4 py-2 rounded-2xl border border-gray-100 shadow-sm w-96">
+            <Search size={18} className="text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Quick search inventory..." 
+              className="bg-transparent border-none outline-none text-sm font-medium w-full"
+            />
+          </div>
 
-            {/* Profile Section */}
+          <div className="flex items-center gap-6">
+            <button className="relative p-2.5 rounded-xl bg-white border border-gray-100 text-gray-500 hover:text-blue-600 transition-all shadow-sm">
+              <Bell size={20} />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+
             <div className="relative">
               <button
                 onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                className="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-3 p-1.5 pr-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all"
               >
-                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: theme.primary, color: theme.text }}>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-black shadow-inner">
                   {pharmacyName.charAt(0)}
                 </div>
-                <div className="text-left hidden md:block">
-                  <p className="text-sm font-semibold" style={{ color: '#2D2D49' }}>{pharmacyName}</p>
-                  <p className="text-xs" style={{ color: '#1A1A1A' }}>Pharmacy</p>
+                <div className="text-left hidden lg:block">
+                  <p className="text-sm font-black text-[#2D2D49] leading-tight">{pharmacyName}</p>
+                  <p className="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Pharmacy Partner</p>
                 </div>
-                <svg className="w-4 h-4" style={{ color: '#1A1A1A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
               </button>
 
-              {/* Profile Dropdown */}
               {showProfileDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  <Link
-                    to="/dashboard/profile"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    style={{ color: '#1A1A1A' }}
-                    onClick={() => setShowProfileDropdown(false)}
+                <div className="absolute right-0 mt-3 w-56 bg-white rounded-[1.5rem] shadow-2xl shadow-blue-900/10 border border-gray-50 py-3 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="px-4 py-2 mb-2 border-b border-gray-50">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Account</p>
+                  </div>
+                  <DropdownLink icon={<UserCircle size={18}/>} label="My Profile" to="/dashboard/profile" />
+                  <DropdownLink icon={<Settings size={18}/>} label="System Settings" to="/dashboard/profile" />
+                  <hr className="my-2 border-gray-50" />
+                  <button 
+                    onClick={() => setShowLogoutModal(true)}
+                    className="w-full flex items-center gap-3 px-4 py-2 text-red-500 font-bold hover:bg-red-50 transition-colors"
                   >
-                    <div className="flex items-center space-x-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span>Profile Settings</span>
-                    </div>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setShowProfileDropdown(false)
-                      setShowLogoutModal(true)
-                    }}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
-                    style={{ color: '#1A1A1A' }}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      <span>Logout</span>
-                    </div>
+                    <LogOut size={18} /> Logout
                   </button>
                 </div>
               )}
             </div>
           </div>
-        </nav>
+        </header>
 
-        {/* Page Content */}
-        <main className="p-6">
+        {/* Dynamic Page Content */}
+        <main className="p-8 max-w-7xl mx-auto">
           {children}
         </main>
       </div>
 
-      {/* Logout Confirmation Modal */}
+      {/* --- LOGOUT MODAL --- */}
       {showLogoutModal && (
-        <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-4" style={{ color: '#2D2D49' }}>
-              Confirm Logout
-            </h3>
-            <p className="mb-6" style={{ color: '#1A1A1A' }}>
-              Are you sure you want to log out?
-            </p>
-            <div className="flex space-x-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-[#2D2D49]/60 backdrop-blur-sm" onClick={() => setShowLogoutModal(false)} />
+          <div className="relative bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center">
+            <div className="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <LogOut size={40} />
+            </div>
+            <h3 className="text-2xl font-black text-[#2D2D49] mb-2">Sign Out?</h3>
+            <p className="text-gray-500 font-medium mb-8">You will need to login again to manage your inventory.</p>
+            <div className="flex gap-4">
               <button
-                onClick={handleLogout}
-                className="flex-1 py-2 px-4 rounded-lg font-semibold transition-colors"
-                style={{ 
-                  backgroundColor: theme.primary,
-                  color: theme.text
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = theme.secondary}
-                onMouseLeave={(e) => e.target.style.backgroundColor = theme.primary}
+                onClick={() => navigate('/')}
+                className="flex-1 py-4 bg-red-500 text-white font-black rounded-2xl hover:bg-red-600 transition-all"
               >
-                Yes
+                Logout
               </button>
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="flex-1 py-2 px-4 rounded-lg font-semibold border-2 transition-colors"
-                style={{ 
-                  borderColor: '#E5E7EB',
-                  color: '#1A1A1A',
-                  backgroundColor: 'transparent'
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#F6F8FA'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                className="flex-1 py-4 bg-gray-100 text-gray-600 font-black rounded-2xl hover:bg-gray-200 transition-all"
               >
-                Cancel
+                Stay
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* Close dropdown when clicking outside */}
-      {showProfileDropdown && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowProfileDropdown(false)}
-        ></div>
-      )}
     </div>
   )
 }
 
+const DropdownLink = ({ icon, label, to }) => (
+  <Link to={to} className="flex items-center gap-3 px-4 py-2.5 text-gray-600 font-bold hover:bg-blue-50 hover:text-blue-600 transition-colors">
+    {icon} <span>{label}</span>
+  </Link>
+)
+
 export default DashboardLayout
-
-

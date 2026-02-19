@@ -18,11 +18,9 @@ const Home = () => {
     <>
 
      <Hero />
-    <KeyFeatures />
       <FindPharmacy />
       <FeaturedPharmacies />
-
-      
+      <KeyFeatures />
       <TestimonialCarousel />
     </>
   )

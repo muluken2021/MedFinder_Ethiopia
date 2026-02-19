@@ -1,4 +1,16 @@
 import React, { useState } from 'react'
+import { 
+  User, 
+  Lock, 
+  Settings, 
+  Bell, 
+  Mail, 
+  ShieldAlert, 
+  CheckCircle,
+  CloudUpload,
+  Save,
+  Info
+} from 'lucide-react'
 
 const AdminSettings = () => {
   const [showSuccess, setShowSuccess] = useState(false)
@@ -19,10 +31,15 @@ const AdminSettings = () => {
     autoApprovePharmacies: false
   })
 
-  const handleProfileUpdate = (e) => {
-    e.preventDefault()
+  const triggerSuccess = () => {
     setShowSuccess(true)
     setTimeout(() => setShowSuccess(false), 3000)
+  }
+
+  const handleProfileUpdate = (e) => {
+    e.preventDefault()
+    // API Call Logic Here
+    triggerSuccess()
   }
 
   const handlePasswordUpdate = (e) => {
@@ -31,248 +48,150 @@ const AdminSettings = () => {
       alert('New passwords do not match!')
       return
     }
-    alert('Password updated successfully!')
+    triggerSuccess()
     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' })
   }
 
   const handleSiteSettingsChange = (name, value) => {
-    setSiteSettings({
-      ...siteSettings,
-      [name]: value
-    })
+    setSiteSettings({ ...siteSettings, [name]: value })
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2" style={{ color: '#2D2D49' }}>Settings</h1>
-        <p style={{ color: '#1A1A1A' }}>Manage admin profile and site settings</p>
-      </div>
-
-      {showSuccess && (
-        <div className="mb-6 p-4 rounded-lg flex items-center space-x-3" style={{ backgroundColor: 'rgba(43, 182, 115, 0.1)', borderLeft: '4px solid #2BB673' }}>
-          <svg className="w-6 h-6 flex-shrink-0" style={{ color: '#2BB673' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          <p className="font-semibold" style={{ color: '#2BB673' }}>Settings updated successfully!</p>
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+      
+      {/* Dynamic Toast Notification */}
+      <div className={`fixed top-10 right-10 z-[100] flex items-center gap-3 px-6 py-4 rounded-[2rem] bg-white shadow-2xl shadow-emerald-200/50 text-emerald-600 border border-emerald-50 transition-all duration-500 ${showSuccess ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10 pointer-events-none'}`}>
+        <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+          <CheckCircle size={18} />
         </div>
-      )}
-
-      {/* Admin Profile */}
-      <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-        <h2 className="text-2xl font-bold mb-6" style={{ color: '#2D2D49' }}>Admin Profile</h2>
-        <form onSubmit={handleProfileUpdate} className="space-y-6">
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Name</label>
-            <input
-              type="text"
-              value={adminProfile.name}
-              onChange={(e) => setAdminProfile({ ...adminProfile, name: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-              onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Email</label>
-            <input
-              type="email"
-              value={adminProfile.email}
-              onChange={(e) => setAdminProfile({ ...adminProfile, email: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#0B6B6B'}
-              onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-            />
-          </div>
-          <button
-            type="submit"
-            className="px-6 py-3 rounded-lg font-semibold transition-colors"
-            style={{ 
-              backgroundColor: '#0B6B6B',
-              color: 'white'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
-          >
-            Update Profile
-          </button>
-        </form>
+        <div className="flex flex-col">
+          <span className="font-black text-sm uppercase tracking-wider leading-none">Success</span>
+          <span className="text-xs font-bold text-emerald-800/60 mt-0.5">Cloud Sync Complete</span>
+        </div>
       </div>
 
-      {/* Password Change */}
-      <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-        <h2 className="text-2xl font-bold mb-6" style={{ color: '#2D2D49' }}>Change Password</h2>
-        <form onSubmit={handlePasswordUpdate} className="space-y-6">
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Current Password</label>
-            <input
-              type="password"
-              value={passwordData.currentPassword}
-              onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>New Password</label>
-            <input
-              type="password"
-              value={passwordData.newPassword}
-              onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-              required
-            />
-          </div>
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Confirm New Password</label>
-            <input
-              type="password"
-              value={passwordData.confirmPassword}
-              onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="px-6 py-3 rounded-lg font-semibold transition-colors"
-            style={{ 
-              backgroundColor: '#0B6B6B',
-              color: 'white'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
-          >
-            Update Password
-          </button>
-        </form>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-5xl font-black text-[#2D2D49] tracking-tighter">System <span className="text-brand-600">Config</span></h1>
+          <p className="text-gray-400 font-bold mt-2 uppercase text-xs tracking-[0.2em]">Environment: Production V2.4</p>
+        </div>
       </div>
 
-      {/* Site Settings */}
-      <div className="bg-white rounded-lg shadow-md p-8 mb-6">
-        <h2 className="text-2xl font-bold mb-6" style={{ color: '#2D2D49' }}>Site Settings</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 pt-4">
         
-        <div className="space-y-6">
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Contact Email</label>
-            <input
-              type="email"
-              value={siteSettings.contactEmail}
-              onChange={(e) => handleSiteSettingsChange('contactEmail', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-            />
+        {/* Navigation Column */}
+        <div className="lg:col-span-1 space-y-3">
+          <SettingsTab icon={<User size={18} />} label="Personal Profile" active />
+          <SettingsTab icon={<Lock size={18} />} label="Security & Keys" />
+          <SettingsTab icon={<Settings size={18} />} label="Platform Rules" />
+          <SettingsTab icon={<Bell size={18} />} label="Email Triggers" />
+          
+          <div className="mt-12 p-8 bg-[#2D2D49] rounded-[2.5rem] text-white overflow-hidden relative group">
+            <Info className="absolute -right-4 -top-4 w-24 h-24 text-white/5 rotate-12 transition-transform group-hover:rotate-45" />
+            <span className="font-black text-[10px] uppercase tracking-widest text-brand-400">Pro-Tip</span>
+            <p className="text-xs font-medium mt-3 leading-relaxed text-white/70">
+              Maintenance mode will redirect all traffic to a static landing page while you perform database migrations.
+            </p>
           </div>
+        </div>
 
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>About Text</label>
-            <textarea
-              rows="4"
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none transition-colors resize-none"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-              placeholder="Enter site description..."
-            ></textarea>
-          </div>
-
-          <div>
-            <label className="block mb-2 font-semibold" style={{ color: '#2D2D49' }}>Upload Site Logo</label>
-            <input
-              type="file"
-              accept="image/*"
-              className="w-full px-4 py-3 rounded-lg border-2 outline-none"
-              style={{ 
-                color: '#1A1A1A',
-                borderColor: '#E5E7EB'
-              }}
-            />
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: '#F6F8FA' }}>
-              <div>
-                <label className="font-semibold block mb-1" style={{ color: '#2D2D49' }}>Maintenance Mode</label>
-                <p className="text-sm" style={{ color: '#1A1A1A' }}>Put the site in maintenance mode</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={siteSettings.maintenanceMode}
-                  onChange={(e) => handleSiteSettingsChange('maintenanceMode', e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 rounded-full peer peer-focus:outline-none transition-colors" style={{ backgroundColor: siteSettings.maintenanceMode ? '#2BB673' : '#E5E7EB' }}>
-                  <div className={`w-5 h-5 rounded-full transition-transform ${siteSettings.maintenanceMode ? 'translate-x-5' : 'translate-x-0'} bg-white mt-0.5 ml-0.5`}></div>
-                </div>
-              </label>
+        {/* Content Column */}
+        <div className="lg:col-span-3 space-y-12">
+          
+          {/* Identity Section */}
+          <section className="space-y-6">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="w-1.5 h-8 bg-brand-600 rounded-full" />
+              <h2 className="text-2xl font-black text-[#2D2D49]">Identity Settings</h2>
             </div>
 
-            <div className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: '#F6F8FA' }}>
-              <div>
-                <label className="font-semibold block mb-1" style={{ color: '#2D2D49' }}>Approve Pharmacies Automatically</label>
-                <p className="text-sm" style={{ color: '#1A1A1A' }}>Auto-approve new pharmacy registrations</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={siteSettings.autoApprovePharmacies}
-                  onChange={(e) => handleSiteSettingsChange('autoApprovePharmacies', e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 rounded-full peer peer-focus:outline-none transition-colors" style={{ backgroundColor: siteSettings.autoApprovePharmacies ? '#2BB673' : '#E5E7EB' }}>
-                  <div className={`w-5 h-5 rounded-full transition-transform ${siteSettings.autoApprovePharmacies ? 'translate-x-5' : 'translate-x-0'} bg-white mt-0.5 ml-0.5`}></div>
+            <div className="bg-white rounded-[3rem] shadow-xl shadow-brand-900/5 border border-gray-100 p-10">
+              <form onSubmit={handleProfileUpdate} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <InputGroup label="Display Name" value={adminProfile.name} onChange={(v) => setAdminProfile({...adminProfile, name: v})} icon={<User size={18}/>} />
+                  <InputGroup label="Email Access" value={adminProfile.email} onChange={(v) => setAdminProfile({...adminProfile, email: v})} icon={<Mail size={18}/>} />
                 </div>
-              </label>
+                <button type="submit" className="group flex items-center gap-3 bg-[#2D2D49] text-white font-black px-10 py-4 rounded-2xl hover:bg-brand-600 transition-all active:scale-95 shadow-xl shadow-brand-900/20">
+                  <Save size={18} className="group-hover:rotate-12 transition-transform" /> Save Profile
+                </button>
+              </form>
             </div>
-          </div>
+          </section>
 
-          <button
-            onClick={() => {
-              setShowSuccess(true)
-              setTimeout(() => setShowSuccess(false), 3000)
-            }}
-            className="w-full py-3 px-6 rounded-lg font-semibold transition-colors"
-            style={{ 
-              backgroundColor: '#0B6B6B',
-              color: 'white'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#095555'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#0B6B6B'}
-          >
-            Save Site Settings
-          </button>
+          {/* Operational Rules */}
+          <section className="space-y-6">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="w-1.5 h-8 bg-emerald-500 rounded-full" />
+              <h2 className="text-2xl font-black text-[#2D2D49]">Operational Rules</h2>
+            </div>
+
+            <div className="bg-white rounded-[3rem] shadow-xl shadow-brand-900/5 border border-gray-100 p-10 space-y-6">
+              <ToggleItem 
+                label="Maintenance Mode" 
+                description="Disable the public pharmacy search engine."
+                icon={<ShieldAlert size={20} className="text-amber-500" />}
+                checked={siteSettings.maintenanceMode}
+                onChange={(v) => handleSiteSettingsChange('maintenanceMode', v)}
+              />
+              <ToggleItem 
+                label="Trust New Entities" 
+                description="Automatically verify and list new pharmacies."
+                icon={<CheckCircle size={20} className="text-brand-500" />}
+                checked={siteSettings.autoApprovePharmacies}
+                onChange={(v) => handleSiteSettingsChange('autoApprovePharmacies', v)}
+              />
+            </div>
+          </section>
         </div>
       </div>
     </div>
   )
 }
 
+// Sub-components
+const SettingsTab = ({ icon, label, active = false }) => (
+  <div className={`flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all cursor-pointer group ${active ? 'bg-white text-brand-600 shadow-xl shadow-brand-600/5 border border-gray-100' : 'text-gray-400 hover:text-gray-600'}`}>
+    <div className={`${active ? 'text-brand-600' : 'text-gray-400 group-hover:text-gray-600'}`}>{icon}</div>
+    <span className="text-sm">{label}</span>
+  </div>
+)
+
+const InputGroup = ({ label, value, onChange, type = "text", icon }) => (
+  <div className="space-y-3">
+    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">{label}</label>
+    <div className="relative group">
+      <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-500 transition-colors">
+        {icon}
+      </div>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full pl-14 pr-6 py-5 bg-gray-50 border-2 border-transparent rounded-[1.5rem] outline-none focus:bg-white focus:border-brand-500 transition-all font-bold text-[#2D2D49]"
+      />
+    </div>
+  </div>
+)
+
+const ToggleItem = ({ label, description, checked, onChange, icon }) => (
+  <div className="flex items-center justify-between p-8 rounded-[2rem] bg-gray-50/50 border border-gray-100 hover:border-brand-200 transition-all">
+    <div className="flex items-center gap-6">
+      <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center border border-gray-100">
+        {icon}
+      </div>
+      <div>
+        <p className="font-black text-[#2D2D49] text-lg leading-tight">{label}</p>
+        <p className="text-xs text-gray-400 font-bold mt-1 tracking-tight">{description}</p>
+      </div>
+    </div>
+    <button 
+      onClick={() => onChange(!checked)}
+      className={`w-16 h-9 rounded-full transition-all duration-500 relative ${checked ? 'bg-emerald-500 shadow-lg shadow-emerald-500/30' : 'bg-gray-200'}`}
+    >
+      <div className={`absolute top-1.5 w-6 h-6 bg-white rounded-full transition-all duration-500 shadow-md ${checked ? 'left-8.5' : 'left-1.5'}`} />
+    </button>
+  </div>
+)
+
 export default AdminSettings
-
-
-
