@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, MapPin, PhoneCall, Search, ChevronLeft, ChevronRight, Loader2, Hospital, Inbox, BadgeCheck, Globe } from 'lucide-react';
+import { fallbackPharmacies } from '../data/pharmacyData.js';
+import { useNavigate } from 'react-router-dom';
+
 
 const Pharmacies = () => {
+  const navigate = useNavigate();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -9,22 +14,37 @@ const Pharmacies = () => {
   const [loading, setLoading] = useState(true);
   const pharmaciesPerPage = 6;
 
-  useEffect(() => {
-    const fetchPharmacies = async () => {
-      setLoading(true);
-      try {
-        // Updated to use a safe check for the fetch
-        const response = await fetch('http://localhost:5000/api/pharmacies');
-        const data = await response.json();
-        setPharmacies(data);
-      } catch (error) {
-        console.error('Error fetching pharmacies:', error);
-      } finally {
-        setLoading(false);
+  const openInMaps = (pharmacy) => {
+  // We use the address or pharmacy name + city for the search query
+  const locationQuery = pharmacy.address || `${pharmacy.pharmacyName}, ${pharmacy.city}`;
+  const encodedQuery = encodeURIComponent(locationQuery);
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
+  
+  window.open(googleMapsUrl, '_blank');
+};
+
+useEffect(() => {
+  const fetchPharmacies = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/pharmacies');
+      
+      if (!response.ok) {
+        throw new Error('Server responded with an error');
       }
-    };
-    fetchPharmacies();
-  }, []);
+
+      const data = await response.json();
+      setPharmacies(data.length > 0 ? data : fallbackPharmacies);
+    } catch (error) {
+      console.error('Error fetching pharmacies, using fallback:', error);
+      // If the API is down or fetch fails, use the fallback data
+      setPharmacies(fallbackPharmacies);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchPharmacies();
+}, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -48,23 +68,21 @@ const Pharmacies = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* 🔹 HEADER SECTION */}
-      <section className="bg-gray-50 border-b border-gray-100 py-20 px-6">
-        <div className="container mx-auto max-w-7xl text-center">
+      <section className="bg-brand-700 border-b border-gray-100 pt-30 pb-10 px-6 lg:px-24 ">
+        <div className="container">
           
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight mb-4">
-            Verified <span className="text-brand-600">Pharmacy Network</span>
+          <h1 className="text-3xl md:text-4xl font-semibold text-gray-100 tracking-tight mb-4">
+            Verified Pharmacy Network 
           </h1>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+          <p className="text-gray-300 max-w-2xl mb-8  text-lg">
             Access our comprehensive database of registered pharmaceutical providers across Ethiopia.
           </p>
         </div>
-      </section>
 
-      <div className="container mx-auto max-w-7xl px-6 -mt-10 relative z-10">
         {/* 🔹 SEARCH & FILTER BAR */}
-        <div className="max-w-4xl mx-auto mb-16">
+        <div className="max-w-4xl  mb-16">
           <div className="bg-white rounded-3xl p-3 shadow-xl shadow-brand-900/5 border border-gray-100 flex flex-col md:flex-row gap-3">
-            <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4 border border-transparent focus-within:border-brand-200 focus-within:bg-white transition-all">
+            <div className="flex-1 flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4 border  border-brand-200 focus-within:bg-white transition-all">
               <Search className="text-gray-400" size={20} />
               <input
                 type="text"
@@ -73,6 +91,7 @@ const Pharmacies = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 bg-transparent outline-none text-gray-900 placeholder:text-gray-400 font-medium"
               />
+              
             </div>
 
             <div className="md:w-64 flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4 border border-transparent focus-within:border-brand-200 focus-within:bg-white transition-all">
@@ -91,6 +110,10 @@ const Pharmacies = () => {
           </div>
         </div>
 
+      </section>
+
+      <div className="container lg:px-20  px-6 mt-10 relative z-10">
+        
         {/* 🔹 CONTENT STATE */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 text-gray-400">
@@ -139,10 +162,16 @@ const Pharmacies = () => {
                   </div>
 
                   <div className="grid grid-cols-1 gap-2">
-                    <button className="w-full py-3.5 rounded-xl bg-gray-900 text-white font-bold text-xs hover:bg-brand-600 transition-all shadow-lg shadow-gray-200">
+                   <button 
+                      onClick={() => navigate(`/pharmacy/${pharmacy._id}/inventory`)}
+                      className="cursor-pointer w-full py-3.5 rounded-xl bg-brand-500 text-white font-bold text-xs hover:bg-brand-600 transition-all shadow-lg shadow-gray-200"
+                    >
                       VIEW INVENTORY
                     </button>
-                    <button className="w-full py-3.5 rounded-xl bg-white border border-gray-200 text-gray-600 font-bold text-xs hover:bg-gray-50 transition-all">
+                    <button 
+                      onClick={() => openInMaps(pharmacy)}
+                      className="cursor-pointer w-full py-3.5 rounded-xl bg-white border border-gray-200 text-gray-600 font-bold text-xs hover:bg-gray-50 transition-all"
+                    >
                       GET DIRECTIONS
                     </button>
                   </div>

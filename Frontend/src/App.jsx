@@ -26,12 +26,18 @@ import AdminSettings from './pages/admin/AdminSettings'
 
 
 import PrivateRoute from './components/PrivateRoute';
+import PharmacyInventory from './pages/PharmacyInventory'
+import ScrollToTop from './components/ScrollToTop'
 
 const AppContent = () => {
   const { theme } = useTheme()
 
   return (
+   
+    <div>
+    <ScrollToTop />
     <Routes>
+      
       {/* Public Routes with Navbar and Footer */}
       <Route path="/*" element={
         <div className="min-h-screen flex flex-col" style={{ backgroundColor: theme.background }}>
@@ -44,6 +50,7 @@ const AppContent = () => {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/register-pharmacy" element={<RegisterPharmacy />} />
+              <Route path="/pharmacy/:pharmacyId/inventory" element={<PharmacyInventory />} />
               <Route path="/login" element={<Login />} />
             </Routes>
           </main>
@@ -134,6 +141,8 @@ const AppContent = () => {
           } />
 
     </Routes>
+
+    </div>
   )
 }
 

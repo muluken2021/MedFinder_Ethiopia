@@ -91,8 +91,8 @@ const FeaturedPharmaciesHero = () => {
           {/* CONTENT: RIGHT SIDE */}
           <div className="w-full lg:w-1/2 space-y-6">
             
-            <h2 className="text-4xl md:text-5xl font-bold text-[#111827] leading-tight">
-              Verified <span className="text-brand-500">Institutional</span> Partners
+            <h2 className="text-4xl md:text-5xl font-semibold text-[#111827] leading-tight">
+              Verified <span className="text-brand-500">Pharmacies</span> 
             </h2>
             
             <p className="text-gray-500 text-lg leading-relaxed max-w-lg">

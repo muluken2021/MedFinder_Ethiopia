@@ -9,6 +9,7 @@ import FeaturedPharmacies from '../components/FeaturedPharmacies'
 import TestimonialCarousel from '../components/TestimonialCarousel'
 import KeyFeatures from '../components/KeyFeatures'
 
+
 const Home = () => {
   
   const { theme } = useTheme()  // ✅ access theme colors
@@ -22,6 +23,7 @@ const Home = () => {
       <FeaturedPharmacies />
       <KeyFeatures />
       <TestimonialCarousel />
+
     </>
   )
 }

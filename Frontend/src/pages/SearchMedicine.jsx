@@ -47,11 +47,11 @@ const SearchMedicine = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* 🔹 HERO SEARCH HUB */}
-      <section className="bg-gray-50 border-b border-gray-100 pt-20 pb-24 px-6">
-        <div className="container mx-auto max-w-5xl text-center">
+      <section className="bg-brand-700 border-b border-gray-100 pt-30 pb-20 px-6 lg:px-24 ">
+        <div className="container  text-start">
           
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight mb-8">
-            Find Your <span className="text-brand-600">Medication</span>
+          <h1 className="text-3xl md:text-4xl font-semibold text-gray-100 tracking-tight mb-8">
+            Find Your Medication
           </h1>
 
           <div className="bg-white rounded-3xl p-4 shadow-xl shadow-brand-900/5 border border-gray-100">
@@ -122,7 +122,7 @@ const SearchMedicine = () => {
       </section>
 
       {/* 🔹 RESULTS GRID */}
-      <div className="container mx-auto max-w-7xl px-6 pb-16">
+      <div className="container mx-auto max-w-7xl px-6 py-16">
         <div className="flex items-center justify-between mb-10 border-b border-gray-100 pb-6">
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-bold text-gray-900">Verified Results</h2>
@@ -171,7 +171,7 @@ const SearchMedicine = () => {
 
                 <button
                   onClick={() => openInMaps(item)}
-                  className="w-full py-4 rounded-xl bg-gray-900 text-white font-bold text-xs hover:bg-brand-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gray-100"
+                  className="cursor-pointer w-full py-4 rounded-xl bg-brand-500 text-white font-bold text-xs hover:bg-brand-600 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gray-100"
                 >
                   <Navigation size={14} />
                   NAVIGATE TO LOCATION

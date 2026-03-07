@@ -1,5 +1,6 @@
 import React from "react";
 import { Search, MapPin, PhoneCall, Target, Users, Heart, ArrowRight, ShieldCheck, CheckCircle2, Award } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const About = () => {
   const steps = [
@@ -34,22 +35,22 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      {/* 🔹 HERO SECTION */}
-      <section className="relative py-24 px-6 overflow-hidden bg-gray-50">
+      {/*  HERO SECTION */}
+      <section className="relative py-32  overflow-hidden bg-brand-700">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-600/5 -skew-x-12 translate-x-20"></div>
-        <div className="max-w-5xl mx-auto text-center relative z-10">
+        <div className="px-6 lg:px-24 text-start relative z-10">
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight leading-tight">
-            Connecting <span className="text-brand-600">Care</span> with <br /> Digital <span className="text-brand-600">Precision</span>
+          <h1 className="text-3xl md:text-4xl font-semibold text-gray-100 mb-8 tracking-tight leading-tight">
+            Connecting Care with Digital Precision
           </h1>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-md text-gray-200 max-w-2xl leading-relaxed">
             MedFinder Ethiopia is building the digital backbone of healthcare, 
             ensuring that no patient ever has to visit multiple pharmacies just to find essential medicine.
           </p>
         </div>
       </section>
 
-      {/* 🔹 HOW IT WORKS */}
+      {/*  HOW IT WORKS */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -82,9 +83,11 @@ const About = () => {
           <ShieldCheck className="mx-auto text-brand-600 mb-6" size={48} />
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Ready to find your medicine?</h2>
           <p className="text-gray-500 mb-10 text-lg font-medium">Join thousands of Ethiopians making smarter healthcare choices today.</p>
-          <button className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-4 rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-xl shadow-gray-200 active:scale-95">
-            Start Your Search <ArrowRight size={20} />
-          </button>
+          <Link to="/search">
+            <button className="cursor-pointer inline-flex items-center gap-3 bg-brand-600 text-white px-10 py-4 rounded-2xl font-bold hover:bg-brand-700 transition-all shadow-xl shadow-gray-200 active:scale-95">
+              Start Your Search <ArrowRight size={20} />
+            </button>
+          </Link>
         </div>
       </section>
     </div>

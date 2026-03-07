@@ -27,9 +27,9 @@ const features = [
 
 const KeyFeatures = () => {
   return (
-    <section className="relative py-24 bg-[#F9FAFB] overflow-hidden">
+    <section className="relative py-24  overflow-hidden">
       {/* Subtle Structural Accents */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+      <div className="absolute top-0 left-0 w-full h-px "></div>
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">

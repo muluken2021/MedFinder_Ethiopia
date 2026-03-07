@@ -89,7 +89,7 @@ const RegisterPharmacy = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
         <div className="max-w-xl w-full bg-white rounded-[3rem] shadow-2xl shadow-brand-900/5 p-12 text-center border border-gray-100">
           <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8">
-            <CheckCircle2 size={40} className="text-emerald-500" />
+            <CheckCircle2 size={40} className="text-brand-500" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Application Received</h2>
           <p className="text-gray-500 mb-10 leading-relaxed font-medium">
@@ -116,22 +116,22 @@ const RegisterPharmacy = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] py-20 px-6 font-sans">
-      <div className="container mx-auto max-w-7xl">
-        <div className="text-center mb-16">
+    <div className="min-h-screen bg-[#FDFDFD] font-sans ">
+      <div className=" ">
+        <div className="text-center mb-16 bg-brand-700 py-30 px-6">
          
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-            Register Your <span className="text-brand-600">Pharmacy</span>
+          <h1 className=" text-4xl md:text-5xl font-bold text-gray-200 mb-4 tracking-tight ">
+            Register Your Pharmacy
           </h1>
-          <p className="text-gray-500 max-w-2xl mx-auto font-medium">
+          <p className="text-gray-300 max-w-2xl mx-auto font-medium">
             Join Ethiopia’s leading medicine network. Expand your reach and help 
             thousands of patients find life-saving medications.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="pb-20 px-4 lg:px-20">
           {/* Section 1: Core Account Details */}
-          <div className="bg-gray-50 border rounded-2xl border-gray-200  p-8 md:p-12">
+          <div className="bg-gray-50 border rounded-2xl border-gray-200 p-4 md:p-12">
             <h3 className="text-lg font-bold text-gray-900 mb-8 flex items-center gap-2">
               Account Information
             </h3>
@@ -147,7 +147,7 @@ const RegisterPharmacy = () => {
           </div>
 
           {/* Section 2: Location & Verification */}
-          <div className="bg-white rounded-2xl border-gray-200  border p-8 md:p-12">
+          <div className="bg-white rounded-2xl border-gray-200  border p-4 md:p-12">
             <h3 className="text-lg font-bold text-gray-900 mb-8 flex items-center gap-2">
               Pharmacy Location
             </h3>
@@ -195,7 +195,7 @@ const RegisterPharmacy = () => {
           </div>
 
           {/* Section 3: Legal Compliance */}
-          <div className="bg-white  border rounded-2xl border-gray-200 p-8 md:p-12">
+          <div className="bg-white  border rounded-2xl border-gray-200 p-4 md:p-12">
             <h3 className="text-lg font-bold text-gray-900 mb-8 flex items-center gap-2">
               Regulatory Documents
             </h3>

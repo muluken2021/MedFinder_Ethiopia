@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { pharmacies } from '../data/Pharmacies.js';
+import { fallbackPharmacies } from '../data/pharmacyData.js';
 import { assets } from '../assets/assets.js';
 import { SearchCode, MapPin, Phone, ExternalLink, Navigation, LocateFixed } from 'lucide-react';
 
@@ -33,14 +33,14 @@ const FindPharmacy = () => {
 
           let results = [];
           if (detectedStreet) {
-            results = pharmacies.filter(
+            results = fallbackPharmacies.filter(
               (p) =>
                 p.address.toLowerCase().includes(detectedStreet.toLowerCase()) &&
                 p.city.toLowerCase() === detectedCity.toLowerCase()
             );
           }
           if (results.length === 0 && detectedCity) {
-            results = pharmacies.filter(
+            results = fallbackPharmacies.filter(
               (p) => p.city.toLowerCase() === detectedCity.toLowerCase()
             );
           }
@@ -65,19 +65,19 @@ const FindPharmacy = () => {
 
   return (
     <section className="py-16 bg-white">
-      <div className="container mx-auto max-w-9xl px-6 lg:px-12">
-        <div className="bg-gray-50 rounded-[2.5rem] p-8 md:p-16 border border-gray-100 overflow-hidden relative">
+      <div className="container px-6 lg:px-10">
+        <div className=" p-8 md:p-16 borde verflow-hidden relative">
           
           {/* Decorative Pattern */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100/30 blur-[100px] rounded-full pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-100/30 blur-[100px] rounded-full pointer-events-none"></div>
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
             {/* Left Content */}
             <div className="lg:w-1/2 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100/50 text-brand-600 text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100/50 text-brand-600 text-xs font-bold uppercase tracking-wider">
                 <LocateFixed size={14} /> Location Services
               </div>
-              <h2 className="text-gray-900 text-3xl md:text-5xl font-bold tracking-tight">
+              <h2 className="text-gray-900 text-3xl md:text-5xl font-semibold tracking-tight">
                 Find Pharmacies <span className="text-brand-500">Near You</span>
               </h2>
               <p className="text-gray-500 text-lg leading-relaxed max-w-lg">
@@ -101,7 +101,7 @@ const FindPharmacy = () => {
               </div>
               
               <div className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-2xl max-w-sm">
-                <div className="p-3 bg-blue-50 text-brand-500 rounded-xl">
+                <div className="p-3 bg-brand-50 text-brand-500 rounded-xl">
                     <SearchCode size={24} />
                 </div>
                 <div>
@@ -140,9 +140,9 @@ const FindPharmacy = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {currentItems.map((p) => (
-                <div key={p.id} className="group bg-white p-6 rounded-3xl border border-gray-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/5 transition-all">
+                <div key={p.id} className="group bg-white p-6 rounded-3xl border border-gray-200 hover:border-brand-300 hover:shadow-xl hover:shadow-brand-500/5 transition-all">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{p.name}</h3>
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-brand-600 transition-colors">{p.name}</h3>
                     <span className="px-2 py-1 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-tighter">Verified</span>
                   </div>
                   
@@ -155,7 +155,7 @@ const FindPharmacy = () => {
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name}, ${p.city}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gray-50 text-gray-600 text-sm font-bold hover:bg-blue-600 hover:text-white transition-all"
+                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gray-50 text-gray-600 text-sm font-bold hover:bg-brand-600 hover:text-white transition-all"
                   >
                     Open in Maps <ExternalLink size={14} />
                   </a>

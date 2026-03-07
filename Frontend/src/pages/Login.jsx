@@ -65,13 +65,16 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-white font-sans">
+
+    <div >
+      <div className="py-10 bg-brand-700"></div>
+      <div className="min-h-screen flex bg-white font-sans py-20">
       {/* 🔹 LEFT SIDE: FORM */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16">
         <div className="max-w-md w-full">
           {/* Header */}
-          <div className="mb-10 text-left">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3 tracking-tight">
+          <div className="mb-10 text-center sm:text-left">
+            <h1 className="text-4xl font-bold text-gray-700 mb-3 tracking-tight">
               Welcome Back
             </h1>
             <p className="text-gray-500 font-medium">
@@ -165,26 +168,17 @@ const Login = () => {
         </div>
       </div>
 
-      {/* 🔹 RIGHT SIDE: IMAGE/INFO */}
-      <div className="hidden lg:block lg:w-1/2 relative p-12 bg-gray-50">
-        <div className="h-full w-full rounded-[3rem] overflow-hidden relative shadow-2xl">
+      {/* RIGHT SIDE: IMAGE/INFO */}
+      <div className="hidden lg:block lg:w-1/2 relative  bg-gray-50">
+        
           <img
             src={heroimg}
             alt="Pharmacy Location Interface"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full "
           />
           {/* Overlay gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-900/80 via-transparent to-transparent"></div>
           
-          {/* Floating Info Card */}
-          <div className="absolute bottom-12 left-12 right-12 p-8 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 text-white">
-            <h2 className="text-2xl font-bold mb-2">Precision Healthcare Access</h2>
-            <p className="text-brand-100 text-sm leading-relaxed">
-              Help thousands of patients find their medications in real-time. Join the network of 
-              100+ verified pharmacies across the nation.
-            </p>
-          </div>
-        </div>
+      </div>
       </div>
     </div>
   );
