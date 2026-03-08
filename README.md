@@ -6,7 +6,7 @@ A web platform that helps users **search for medicines**, **check availability a
 Check the live website:  
 [View Live Website](https://medfinder-ethiopia.vercel.app)
 
-![Med Finder Screenshot](frontend/medfinder_banner.png)
+![Med Finder Screenshot](frontend/medfinder.png)
 
 ---
 
