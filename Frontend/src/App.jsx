@@ -28,6 +28,7 @@ import AdminSettings from './pages/admin/AdminSettings'
 import PrivateRoute from './components/PrivateRoute';
 import PharmacyInventory from './pages/PharmacyInventory'
 import ScrollToTop from './components/ScrollToTop'
+import NotFound from './pages/NotFound'
 
 const AppContent = () => {
   const { theme } = useTheme()
@@ -52,6 +53,9 @@ const AppContent = () => {
               <Route path="/register-pharmacy" element={<RegisterPharmacy />} />
               <Route path="/pharmacy/:pharmacyId/inventory" element={<PharmacyInventory />} />
               <Route path="/login" element={<Login />} />
+
+                {/* 404 Route */}
+                 <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />
