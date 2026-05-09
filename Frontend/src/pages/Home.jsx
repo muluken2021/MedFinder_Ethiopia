@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-import FAQSection from '../components/FaqSection'
 import { useTheme } from '../context/ThemeContext'  // ✅ import theme hook
 import FindPharmacy from '../components/FindPharmacy'
 
