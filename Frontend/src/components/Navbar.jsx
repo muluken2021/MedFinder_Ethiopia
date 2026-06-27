@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, PlusCircle, LogIn } from 'lucide-react';
+import { Menu, X, PlusCircle, LogIn, Search } from 'lucide-react';
+
+const navLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'Search', path: '/search' },
+  { name: 'Pharmacies', path: '/pharmacies' },
+  { name: 'About', path: '/about' },
+];
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -8,55 +15,49 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 16);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
-  const isActive = (path) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
-
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Search', path: '/search' },
-    { name: 'Pharmacies', path: '/pharmacies' },
-  ];
+  const isActive = (path) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-        scrolled ? 'py-3 bg-brand-700 shadow-xl' : 'py-5 bg-transparent'
+    <nav
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+        scrolled
+          ? 'py-3 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100'
+          : 'py-5 bg-white'
       }`}
     >
-      <div className="container  px-6 lg:px-24 relative z-10">
+      <div className="container mx-auto px-6 lg:px-24">
         <div className="flex items-center justify-between">
-          
-          {/* 🔹 Logo Section */}
-          <Link to="/" className="flex items-center space-x-2">
-            <img 
-              src="/medlogo.png" 
-              className="w-7 brightness-0 invert" 
-              alt="Logo"
-            />
-            <span className="text-xl font-bold text-white tracking-tight">
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-10 h-10 bg-brand-500 rounded-sm flex items-center justify-center flex-shrink-0">
+              <img src="/medlogo.png" className="w-6 h-6 brightness-0 invert" alt="Logo" />
+            </div>
+            <span className="text-lg font-bold text-gray-900 tracking-tight">
               Med Finder
             </span>
           </Link>
 
-          {/* 🔹 Desktop Links */}
-          <div className="hidden md:flex items-center space-x-1">
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  isActive(link.path) 
-                    ? 'text-white bg-white/20' 
-                    : 'text-blue-50 hover:text-white hover:bg-white/10'
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                  isActive(link.path)
+                    ? 'text-brand-500 bg-gray-50'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 {link.name}
@@ -64,83 +65,79 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* 🔹 Desktop Action Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to="/login" className="text-sm font-semibold text-white hover:opacity-80 flex items-center gap-2">
-              <LogIn size={18} /> Login
+          {/* Desktop CTAs */}
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              to="/search"
+              className="p-2 rounded-xl text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all"
+              aria-label="Search"
+            >
+              <Search size={18} />
+            </Link>
+            <Link
+              to="/login"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all"
+            >
+              <LogIn size={16} />
+              Login
             </Link>
             <Link
               to="/register-pharmacy"
-              className="px-5 py-2.5 rounded-lg font-bold text-sm transition-all bg-white text-brand-500 hover:bg-blue-50 shadow-lg flex items-center gap-2"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-brand-500 text-white hover:bg-brand-600 transition-all shadow-sm hover:shadow-md"
             >
-              <PlusCircle size={18} />
-              <span>Pharmacy Portal</span>
+              <PlusCircle size={16} />
+              Pharmacy Portal
             </Link>
           </div>
 
-          {/* 🔹 Mobile Menu Toggle (Hamburger) */}
+          {/* Mobile Hamburger */}
           <button
-            onClick={toggleMobileMenu}
-            className="md:hidden p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+            aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
-        {/* 🔹 Mobile Menu Dropdown */}
+        {/* Mobile Menu */}
         <div
-          className={`md:hidden absolute left-0 right-0 top-full mt-2 px-6 transition-all duration-300 ${
-            mobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none'
+          className={`md:hidden absolute left-4 right-4 top-full mt-2 transition-all duration-300 origin-top ${
+            mobileMenuOpen
+              ? 'opacity-100 scale-y-100 pointer-events-auto'
+              : 'opacity-0 scale-y-95 pointer-events-none'
           }`}
         >
-          <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-2xl">
-            <div className="flex flex-col space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`text-base font-semibold p-3 rounded-xl ${
-                    isActive(link.path) ? 'bg-blue-50 text-brand-500' : 'text-gray-600'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <div className="h-[1px] bg-gray-100 my-2" />
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-2xl shadow-gray-200/50 p-4 space-y-1">
+            {navLinks.map((link) => (
               <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 text-gray-600 font-semibold p-3"
+                key={link.path}
+                to={link.path}
+                className={`flex items-center px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                  isActive(link.path)
+                    ? 'bg-gray-50 text-brand-500'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                }`}
               >
-                <LogIn size={20} /> Login
+                {link.name}
               </Link>
-              <Link
-                to="/register-pharmacy"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-3.5 mt-2 rounded-xl text-white font-bold bg-brand-500 shadow-lg"
-              >
-                <PlusCircle size={20} /> Pharmacy Portal
-              </Link>
-            </div>
+            ))}
+            <div className="h-px bg-gray-100 my-2" />
+            <Link
+              to="/login"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50"
+            >
+              <LogIn size={16} /> Login
+            </Link>
+            <Link
+              to="/register-pharmacy"
+              className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-sm font-bold bg-brand-500 text-white"
+            >
+              <PlusCircle size={16} /> Pharmacy Portal
+            </Link>
           </div>
         </div>
       </div>
-
-      {/* 🔹 MATCHED WAVE EFFECT 🔹
-      <div className={`absolute bottom-0 left-0 w-full overflow-hidden leading-[0] transform translate-y-[95%] transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`}>
-        <svg 
-          className="relative block w-full h-[40px]" 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path 
-            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V46.29C80.7,71.4,200.23,78.93,321.39,56.44Z" 
-            fill="#227FBB" 
-          ></path>
-        </svg>
-      </div> */}
     </nav>
   );
 };

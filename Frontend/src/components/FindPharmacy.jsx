@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { fallbackPharmacies } from '../data/pharmacyData.js';
 import { assets } from '../assets/assets.js';
-import { SearchCode, MapPin, Phone, ExternalLink, Navigation, LocateFixed } from 'lucide-react';
+import { Navigation, MapPin, Phone, ExternalLink, Search, LocateFixed, Loader2 } from 'lucide-react';
 
 const FindPharmacy = () => {
   const [city, setCity] = useState('');
@@ -15,9 +15,7 @@ const FindPharmacy = () => {
       alert('Geolocation is not supported by your browser.');
       return;
     }
-
     setLoading(true);
-
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
@@ -28,9 +26,7 @@ const FindPharmacy = () => {
           const data = await res.json();
           const detectedCity = data.address.city || data.address.town || data.address.village || '';
           const detectedStreet = data.address.road || '';
-
           setCity(detectedCity);
-
           let results = [];
           if (detectedStreet) {
             results = fallbackPharmacies.filter(
@@ -45,7 +41,7 @@ const FindPharmacy = () => {
             );
           }
           setFilteredPharmacies(results);
-        } catch (error) {
+        } catch {
           alert('Error detecting location. Try again.');
         } finally {
           setLoading(false);
@@ -64,100 +60,88 @@ const FindPharmacy = () => {
   const totalPages = Math.ceil(filteredPharmacies.length / itemsPerPage);
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container px-6 lg:px-10">
-        <div className=" p-8 md:p-16 borde verflow-hidden relative">
-          
-          {/* Decorative Pattern */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-100/30 blur-[100px] rounded-full pointer-events-none"></div>
+    <section className="py-24 bg-white">
+      <div className=" mx-auto  px-6 lg:px-30">
 
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
-            {/* Left Content */}
-            <div className="lg:w-1/2 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100/50 text-brand-600 text-xs font-bold uppercase tracking-wider">
-                <LocateFixed size={14} /> Location Services
-              </div>
-              <h2 className="text-gray-900 text-3xl md:text-5xl font-semibold tracking-tight">
-                Find Pharmacies <span className="text-brand-500">Near You</span>
-              </h2>
-              <p className="text-gray-500 text-lg leading-relaxed max-w-lg">
-                Instantly locate verified pharmaceutical institutions in your area. 
-                Our network provides real-time availability and contact information.
+       
+          <div className="bg-brand-50 rounded-2xl p-15 space-y-8 text-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-500 mb-4">
+                Location Services
               </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <button
-                  onClick={handleFindNearby}
-                  disabled={loading}
-                  className="cursor-pointer flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-brand-500 text-white font-bold shadow-xl  hover:scale-[1.02] transition-all disabled:opacity-70"
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <Navigation size={20} />
-                  )}
-                  {loading ? 'Detecting Location...' : 'Find Near Me'}
-                </button>
-              </div>
-              
-              <div className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-2xl max-w-sm">
-                <div className="p-3 bg-brand-50 text-brand-500 rounded-xl">
-                    <SearchCode size={24} />
-                </div>
-                <div>
-                    <p className="text-gray-900 font-bold text-sm">National Directory</p>
-                    <p className="text-gray-500 text-xs font-medium">1,200+ Verified locations in Ethiopia</p>
-                </div>
-              </div>
+              <h2 className="text-4xl font-bold text-brand-500 leading-tight tracking-tight mb-4">
+                Pharmacies near you,<br />
+                <span className="text-brand-400">instantly located</span>
+              </h2>
+              <p className="text-brand-400 text-lg leading-relaxed max-w-xl mx-auto">
+                Allow one-click location access and we'll surface verified pharmacies
+                near you with real-time stock and contact details.
+              </p>
             </div>
 
-            {/* Right Image/Illustration */}
-            <div className="lg:w-1/2 flex justify-center">
-              <div className="relative">
-                <img src={assets.location} className="w-full max-w-xl relative z-10" alt="Location map" />
-                <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl z-20 hidden md:block border border-gray-100">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
-                            <MapPin size={20} />
-                        </div>
-                        <div>
-                            <p className="text-gray-900 font-bold text-sm">Smart Mapping</p>
-                            <p className="text-gray-400 text-xs">Precise turn-by-turn guidance</p>
-                        </div>
-                    </div>
-                </div>
-              </div>
-            </div>
+            <button
+              onClick={handleFindNearby}
+              disabled={loading}
+              className="cursor-pointer inline-flex items-center gap-3 px-7 py-4 rounded-2xl bg-brand-500 text-white font-bold text-sm hover:bg-brand-50 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-brand-500/10"
+            >
+              {loading ? (
+                <Loader2 size={20} className="animate-spin" />
+              ) : (
+                <Navigation size={20} />
+              )}
+              {loading ? 'Detecting Location…' : 'Find Near Me'}
+            </button>
+
+            
           </div>
 
-          {/* RESULTS AREA */}
-          <div className={`mt-16 transition-all duration-500 ${filteredPharmacies.length > 0 ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-            <div className="flex items-center gap-3 mb-8">
-                <div className="h-px flex-1 bg-gray-200"></div>
-                <h3 className="text-gray-400 font-bold text-sm uppercase tracking-widest">Results in {city}</h3>
-                <div className="h-px flex-1 bg-gray-200"></div>
+          
+  
+
+        {/* ── Results ── */}
+        {filteredPharmacies.length > 0 && (
+          <div className="mt-16">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="h-px flex-1 bg-gray-100" />
+              <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+                {filteredPharmacies.length} pharmacies found in {city}
+              </p>
+              <div className="h-px flex-1 bg-gray-100" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {currentItems.map((p) => (
-                <div key={p.id} className="group bg-white p-6 rounded-3xl border border-gray-200 hover:border-brand-300 hover:shadow-xl hover:shadow-brand-500/5 transition-all">
+                <div
+                  key={p.id}
+                  className="group bg-white p-6 rounded-3xl border border-gray-100 hover:border-slate-300 hover:shadow-xl hover:shadow-gray-100/80 transition-all duration-300"
+                >
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-brand-600 transition-colors">{p.name}</h3>
-                    <span className="px-2 py-1 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-tighter">Verified</span>
+                    <h3 className="text-base font-bold text-gray-900 group-hover:text-brand-500 transition-colors leading-tight">
+                      {p.name}
+                    </h3>
+                    <span className="px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-bold uppercase tracking-tight flex-shrink-0">
+                      Verified
+                    </span>
                   </div>
-                  
+
                   <div className="space-y-2 mb-6">
-                    <p className="text-gray-500 text-sm flex items-center gap-2"><MapPin size={14} className="text-gray-300" /> {p.address}</p>
-                    <p className="text-gray-500 text-sm flex items-center gap-2"><Phone size={14} className="text-gray-300" /> {p.phone}</p>
+                    <p className="text-gray-500 text-sm flex items-start gap-2">
+                      <MapPin size={14} className="text-gray-300 flex-shrink-0 mt-0.5" />
+                      {p.address}
+                    </p>
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      <Phone size={14} className="text-gray-300 flex-shrink-0" />
+                      {p.phone}
+                    </p>
                   </div>
 
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name}, ${p.city}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gray-50 text-gray-600 text-sm font-bold hover:bg-brand-600 hover:text-white transition-all"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gray-50 text-gray-600 text-xs font-bold hover:bg-brand-500 hover:text-white transition-all border border-gray-100"
                   >
-                    Open in Maps <ExternalLink size={14} />
+                    Open in Maps <ExternalLink size={12} />
                   </a>
                 </div>
               ))}
@@ -165,41 +149,43 @@ const FindPharmacy = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center mt-12 gap-2">
+              <div className="flex items-center justify-center gap-3 mt-10">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                   disabled={currentPage === 1}
-                  className="p-3 rounded-xl border border-gray-200 hover:bg-white disabled:opacity-30 transition-all"
+                  className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 disabled:opacity-30 transition-all"
                 >
-                  <ArrowLeft size={18} />
+                  ← Prev
                 </button>
-                <div className="px-6 py-2 bg-white border border-gray-200 rounded-xl text-gray-600 font-bold text-sm">
-                  Page {currentPage} of {totalPages}
-                </div>
+                <span className="px-4 py-2 text-gray-500 text-sm font-medium">
+                  {currentPage} / {totalPages}
+                </span>
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                   disabled={currentPage === totalPages}
-                  className="p-3 rounded-xl border border-gray-200 hover:bg-white disabled:opacity-30 transition-all"
+                  className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 disabled:opacity-30 transition-all"
                 >
-                  <ArrowRight size={18} />
+                  Next →
                 </button>
               </div>
             )}
           </div>
+        )}
 
-          {city && !loading && filteredPharmacies.length === 0 && (
-            <div className="text-center py-12">
-               <p className="text-gray-400 font-medium">No pharmacies found in <span className="text-gray-900 font-bold">{city}</span>. Try a nearby city.</p>
+        {city && !loading && filteredPharmacies.length === 0 && (
+          <div className="text-center py-16 mt-10">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search size={24} className="text-gray-400" />
             </div>
-          )}
-        </div>
+            <p className="text-gray-500 text-base">
+              No pharmacies found in <span className="text-gray-900 font-bold">{city}</span>.
+            </p>
+            <p className="text-gray-400 text-sm mt-1">Try a nearby city or browse the full directory.</p>
+          </div>
+        )}
       </div>
     </section>
   );
 };
-
-// Helper components for icons used in pagination
-const ArrowLeft = ({size}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>;
-const ArrowRight = ({size}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>;
 
 export default FindPharmacy;

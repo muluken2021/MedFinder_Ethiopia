@@ -1,79 +1,96 @@
 import React from "react";
-import { MapPin, Search, Clock, Zap, ShieldCheck, ArrowRight, CheckCircle2 } from "lucide-react";
+import { MapPin, Search, Clock, ShieldCheck, Zap, TrendingUp } from "lucide-react";
 
 const features = [
   {
-    id: 1,
-    title: "Intelligence Search",
-    description: "Our advanced engine finds exact matches and therapeutic alternatives in seconds.",
     icon: Search,
-    color: "#2563EB", // Medical Blue
+    title: "Intelligent Search",
+    description:
+      "Find exact medicines or therapeutic alternatives instantly. Our smart engine searches across thousands of pharmacy inventories in real time.",
+    accent: "bg-blue-50 text-blue-600",
+    border: "hover:border-blue-200",
   },
   {
-    id: 2,
-    title: "Precision Mapping",
-    description: "Get real-time navigation to the nearest pharmacy with verified medicine in stock.",
     icon: MapPin,
-    color: "#7C3AED", // Purple accent
+    title: "Precision Mapping",
+    description:
+      "Turn-by-turn navigation to the nearest pharmacy carrying your medicine. Filter by distance, hours, or availability.",
+    accent: "bg-violet-50 text-violet-600",
+    border: "hover:border-violet-200",
   },
   {
-    id: 3,
-    title: "Live Stock Pulse",
-    description: "Direct integration with pharmacy inventory systems ensures high data accuracy.",
     icon: Clock,
-    color: "#059669", // Success Green
+    title: "Live Stock Updates",
+    description:
+      "Direct integration with pharmacy systems means you always see what's truly in stock — no more wasted trips.",
+    accent: "bg-emerald-50 text-emerald-600",
+    border: "hover:border-emerald-200",
+  },
+  {
+    icon: ShieldCheck,
+    title: "MOH Verified",
+    description:
+      "Every pharmacy in our network is Ministry of Health certified and regularly audited for compliance and quality.",
+    accent: "bg-orange-50 text-orange-600",
+    border: "hover:border-orange-200",
+  },
+  {
+    icon: Zap,
+    title: "Instant Results",
+    description:
+      "Results appear in under a second, with filters for price range, open hours, and medicine form.",
+    accent: "bg-yellow-50 text-yellow-600",
+    border: "hover:border-yellow-200",
+  },
+  {
+    icon: TrendingUp,
+    title: "Transparent Pricing",
+    description:
+      "Compare prices side by side across pharmacies. No hidden fees — just honest, up-to-date pricing data.",
+    accent: "bg-pink-50 text-pink-600",
+    border: "hover:border-pink-200",
   },
 ];
 
 const KeyFeatures = () => {
   return (
-    <section className="relative py-24  overflow-hidden">
-      {/* Subtle Structural Accents */}
-      <div className="absolute top-0 left-0 w-full h-px "></div>
-      
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 tracking-tight">
-            Designed for <span className="text-brand-600">Critical Access</span>
+    <section className="py-24 bg-white">
+      <div className=" mx-auto px-6 lg:px-30">
+
+        {/* Section Header */}
+        <div className="max-w-2xl mb-16">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand-300 mb-4">
+            Platform Features
+          </p>
+          <h2 className="text-4xl font-bold text-gray-900 leading-tight tracking-tight mb-4">
+            Everything you need to find <br className="hidden sm:block" />
+            medicine fast
           </h2>
-          <p className="text-gray-500 text-md leading-relaxed">
-            We've removed the guesswork from healthcare. Our platform provides the most 
-            reliable pharmaceutical data network in Ethiopia.
+          <p className="text-gray-500 text-lg leading-relaxed">
+            We've removed the guesswork from pharmaceutical access. Built for patients,
+            caregivers, and healthcare professionals across Ethiopia.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {features.map((feature) => {
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature, idx) => {
             const Icon = feature.icon;
             return (
               <div
-                key={feature.id}
-                className="group relative p-8 rounded-3xl bg-white border border-gray-200 hover:border-brand-500 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300"
+                key={idx}
+                className={`group p-8 rounded-3xl bg-white border border-gray-100 transition-all duration-300 hover:shadow-xl hover:shadow-gray-100 ${feature.border}`}
               >
-                <div
-                  className="w-14 h-14 mb-8 flex items-center justify-center rounded-2xl bg-gray-50 border border-gray-100 group-hover:bg-white group-hover:scale-110 transition-all duration-300"
-                  style={{ color: feature.color }}
-                >
-                  <Icon size={28} strokeWidth={2} />
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${feature.accent} transition-transform duration-300 group-hover:scale-110`}>
+                  <Icon size={22} strokeWidth={2} />
                 </div>
-
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-500 leading-relaxed mb-6 text-sm">
-                  {feature.description}
-                </p>
-
-                <div className="cursor-pointer flex items-center gap-2 text-xs font-bold text-brand-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>Learn more</span>
-                  <ArrowRight size={14} />
-                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{feature.description}</p>
               </div>
             );
           })}
         </div>
 
-        
       </div>
     </section>
   );

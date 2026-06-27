@@ -1,46 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, ArrowRight, Star, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
     id: 1,
-    name: "Selam H.",
+    name: "Selam Haile",
     role: "Patient",
+    location: "Addis Ababa",
     avatar: "https://randomuser.me/api/portraits/women/65.jpg",
     rating: 5,
     quote:
-      "This platform helped me find essential medication in minutes when every other pharmacy was out of stock. A lifesaver for our family.",
+      "I found the medication I desperately needed in under 2 minutes. Every other pharmacy was out of stock, but Med Finder showed me exactly where to go. Truly a lifesaver.",
   },
   {
     id: 2,
-    name: "Dr. Tadesse K.",
-    role: "Medical Professional",
+    name: "Dr. Tadesse Kebede",
+    role: "Medical Doctor",
+    location: "Bahir Dar General Hospital",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     rating: 5,
     quote:
-      "I recommend this to all my patients. The real-time inventory tracking is accurate and saves people precious time during emergencies.",
+      "I recommend this platform to all my patients. The real-time inventory data is remarkably accurate and saves people precious time, especially during emergencies.",
   },
   {
     id: 3,
-    name: "Martha A.",
-    role: "Regular User",
+    name: "Martha Alemu",
+    role: "Caregiver",
+    location: "Hawassa",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
     rating: 5,
     quote:
-      "The interface is so clean and easy to use. I love how I can see exactly which pharmacies are open before I leave my house.",
+      "The interface is so clean and simple. I can see which pharmacies are open before leaving home, and the directions are perfect. It's made managing my mother's prescriptions so much easier.",
   },
 ];
 
-const ModernTestimonialCarousel = () => {
+const TestimonialCarousel = () => {
   const [current, setCurrent] = useState(0);
-
-  // Modern Medical Palette
-  const colors = {
-    primary: '#2563EB',
-    textMain: '#111827',
-    textSub: '#6B7280',
-    bgLight: '#F9FAFB'
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -49,100 +44,121 @@ const ModernTestimonialCarousel = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handlePrev = () => {
-    setCurrent((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrent((prev) => (prev + 1) % testimonials.length);
-  };
+  const prev = () => setCurrent((p) => (p === 0 ? testimonials.length - 1 : p - 1));
+  const next = () => setCurrent((p) => (p + 1) % testimonials.length);
 
   return (
-    <section className="py-24 bg-white border-t border-gray-100">
-      <div className="max-w-5xl mx-auto px-6 text-center">
-        
-        {/* Header Section */}
-        <div className="max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-            Trusted by the <span className="text-brand-500">Community</span>
-          </h2>
-          <p className="text-gray-500 text-lg">
-            Hear from the patients and healthcare providers using our network 
-            to improve medical access across the country.
-          </p>
+    <section className="py-24 bg-gray-50/60">
+      <div className=" mx-auto px-6 lg:px-30">
+
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-brand-300 mb-4">
+              Testimonials
+            </p>
+            <h2 className="text-4xl font-bold text-brand-500 leading-tight tracking-tight">
+              Trusted by the <span className="text-brand-500">community</span>
+            </h2>
+            <p className="text-gray-500 text-lg mt-3 max-w-lg">
+              Hear from patients and healthcare professionals who use Med Finder
+              to improve medical access every day.
+            </p>
+          </div>
+          {/* Navigation */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={prev}
+              className="w-12 h-12 rounded-2xl border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-brand-500 hover:border-slate-300 hover:shadow-md transition-all"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={next}
+              className="w-12 h-12 rounded-2xl border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-brand-500 hover:border-slate-300 hover:shadow-md transition-all"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
 
-        {/* Carousel Container */}
-        <div className="relative min-h-[400px] flex items-center justify-center">
+        {/* Cards */}
+        <div className="grid lg:grid-cols-3 gap-6">
           {testimonials.map((t, index) => {
             const isActive = index === current;
-            
             return (
-              <div 
-                key={t.id} 
-                className={`absolute w-full max-w-2xl transition-all duration-700 ease-in-out transform
-                  ${isActive ? "opacity-100 scale-100 z-20" : "opacity-0 scale-95 z-10 pointer-events-none"}`}
+              <div
+                key={t.id}
+                onClick={() => setCurrent(index)}
+                className={`relative p-8 rounded-3xl border cursor-pointer transition-all duration-500 ${
+                  isActive
+                    ? "bg-brand-400 border-brand-400 text-white shadow-2xl shadow-brand-500/20 scale-[1.02]"
+                    : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-lg"
+                }`}
               >
-                <div className="bg-gray-50 border border-gray-100 p-8 md:p-12 rounded-[2rem] relative">
-                  <Quote className="absolute top-8 right-8 text-blue-100" size={64} />
-                  
-                  <div className="flex flex-col items-center text-center">
-                    <div className="flex mb-6">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`mx-0.5 ${i < Math.round(t.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`}
-                          size={18}
-                        />
-                      ))}
-                    </div>
+                {/* Quote icon */}
+                <Quote
+                  size={40}
+                  className={`absolute top-6 right-6 ${isActive ? "text-white/10" : "text-gray-100"}`}
+                />
 
-                    <p className="text-xl md:text-2xl text-gray-700 font-medium italic leading-relaxed mb-8 relative z-10">
-                      “{t.quote}”
+                {/* Stars */}
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={14}
+                      className={
+                        i < t.rating
+                          ? isActive
+                            ? "fill-yellow-300 text-yellow-300"
+                            : "fill-yellow-400 text-yellow-400"
+                          : "text-gray-200"
+                      }
+                    />
+                  ))}
+                </div>
+
+                {/* Quote text */}
+                <p
+                  className={`text-base leading-relaxed mb-8 ${
+                    isActive ? "text-white/90" : "text-gray-600"
+                  }`}
+                >
+                  "{t.quote}"
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center gap-3">
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    className={`w-11 h-11 rounded-full object-cover border-2 ${
+                      isActive ? "border-white/30" : "border-gray-100"
+                    }`}
+                  />
+                  <div>
+                    <p className={`font-bold text-sm ${isActive ? "text-white" : "text-gray-900"}`}>
+                      {t.name}
                     </p>
-
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={t.avatar}
-                        alt={t.name}
-                        className="w-14 h-14 rounded-full border-2 border-white shadow-md object-cover"
-                      />
-                      <div className="text-left">
-                        <h4 className="font-bold text-gray-900">{t.name}</h4>
-                        <p className="text-brand-500 text-sm font-semibold uppercase tracking-wider">{t.role}</p>
-                      </div>
-                    </div>
+                    <p className={`text-xs mt-0.5 ${isActive ? "text-white/60" : "text-gray-400"}`}>
+                      {t.role} · {t.location}
+                    </p>
                   </div>
                 </div>
               </div>
             );
           })}
-
-          {/* Navigation Controls - Clean Outlined Style */}
-          <div className="absolute w-full flex justify-between items-center z-30 px-2 pointer-events-none">
-            <button
-              onClick={handlePrev}
-              className="pointer-events-auto p-4 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-brand-500 hover:border-blue-200 hover:shadow-lg transition-all"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <button
-              onClick={handleNext}
-              className="pointer-events-auto p-4 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-brand-500 hover:border-blue-200 hover:shadow-lg transition-all"
-            >
-              <ArrowRight size={20} />
-            </button>
-          </div>
         </div>
 
-        {/* Minimal Progress Dots */}
-        <div className="flex justify-center gap-2 mt-12">
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-10">
           {testimonials.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === current ? "w-8 text-brand-500" : "w-2 bg-gray-200"
+              className={`rounded-full transition-all duration-300 ${
+                i === current ? "w-6 h-2 bg-brand-500" : "w-2 h-2 bg-gray-300"
               }`}
             />
           ))}
@@ -152,4 +168,4 @@ const ModernTestimonialCarousel = () => {
   );
 };
 
-export default ModernTestimonialCarousel;
+export default TestimonialCarousel;

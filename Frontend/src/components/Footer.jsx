@@ -1,89 +1,103 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Send, Activity, MapPin, Phone } from 'lucide-react';
+import { Facebook, Twitter, Instagram, MapPin, Phone, Mail } from 'lucide-react';
+
+const footerLinks = {
+  Platform: [
+    { name: 'Search Medicine', path: '/search' },
+    { name: 'Nearby Pharmacies', path: '/pharmacies' },
+    { name: 'Register Pharmacy', path: '/register-pharmacy' },
+    { name: 'Pharmacy Portal', path: '/login' },
+  ],
+  Company: [
+    { name: 'About Us', path: '/about' },
+    { name: 'Contact', path: '/contact' },
+    { name: 'Privacy Policy', path: '#' },
+    { name: 'Terms of Service', path: '#' },
+  ],
+};
 
 const Footer = () => {
-  // Medical Design System
-  const styles = {
-    primary: '#2563EB',      // Medical brand
-    bgFooter: '#F9FAFB',     // Clean Surface Gray
-    textMain: '#111827',     // Dark Gray
-    textSecondary: '#6B7280',// Medium Gray
-    border: '#E5E7EB'        // Light Gray Stroke
-  };
-
-  const footerLinks = {
-    platform: [
-      { name: 'Search Medicine', path: '/search' },
-      { name: 'Nearby Pharmacies', path: '/pharmacies' },
-      { name: 'Pharmacy Portal', path: '/login' },
-    ],
-    support: [
-      { name: 'Contact Us', path: '/contact' },
-      { name: 'About Us', path: '/about' },
-      { name: 'Pharmacy Registration', path: '/register-pharmacy' },
-    ],
-   
-  };
-
   return (
-    <footer className="bg-brand-700 pt-0 pb-10 border-t border-brand-600">
-      <div className="container lg:px-24 px-6 lg:px-12">
-        
-        {/* Main Footer Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 py-16">
-          <div className="col-span-2">
-            <Link to="/" className="flex items-center space-x-2 mb-6 group">
-              <span className="text-2xl font-bold tracking-tight text-gray-100">
-                Med Finder
-              </span>
+    <footer className="bg-gray-950 text-white">
+      <div className=" mx-auto px-6 lg:px-30">
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 py-16">
+
+          {/* Brand */}
+          <div className="lg:col-span-2 space-y-5">
+            <Link to="/" className="flex items-center gap-2.5">
+              <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <img src="/medlogo.png" className="w-5 h-5 brightness-0 invert" alt="Logo" />
+              </div>
+              <span className="text-xl font-bold tracking-tight">Med Finder</span>
             </Link>
-            <p className="text-gray-200 max-w-xs mb-8 text-sm leading-relaxed">
-              Empowering Ethiopian citizens with real-time access to life-saving pharmaceuticals through an intelligent data network.
+            <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
+              Empowering Ethiopians with real-time pharmaceutical access — because
+              finding the right medicine should never be hard.
             </p>
-            <div className="flex gap-3">
+
+            {/* Contact */}
+            <div className="space-y-2.5">
+              <p className="flex items-center gap-2.5 text-gray-400 text-sm">
+                <MapPin size={14} className="text-gray-600 flex-shrink-0" />
+                Addis Ababa, Ethiopia
+              </p>
+              <p className="flex items-center gap-2.5 text-gray-400 text-sm">
+                <Phone size={14} className="text-gray-600 flex-shrink-0" />
+                +251 900 000 000
+              </p>
+              <p className="flex items-center gap-2.5 text-gray-400 text-sm">
+                <Mail size={14} className="text-gray-600 flex-shrink-0" />
+                hello@medfinder.et
+              </p>
+            </div>
+
+            {/* Socials */}
+            <div className="flex gap-2.5 pt-2">
               {[Facebook, Twitter, Instagram].map((Icon, i) => (
-                <a key={i} href="#" className="p-2.5 rounded-lg bg-white border border-gray-200 text-gray-400 hover:text-brand-600 hover:border-brand-200 transition-all shadow-sm">
-                  <Icon size={18} />
+                <a
+                  key={i}
+                  href="#"
+                  className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  <Icon size={16} />
                 </a>
               ))}
             </div>
           </div>
 
-          <div>
-            <h4 className="text-gray-100 font-bold text-sm mb-6 uppercase tracking-wider">Platform</h4>
-            <ul className="space-y-4">
-              {footerLinks.platform.map((link) => (
-                <li key={link.name}>
-                  <Link to={link.path} className="text-gray-200 hover:text-brand-50 transition-colors text-sm font-medium">{link.name}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-gray-100 font-bold text-sm mb-6 uppercase tracking-wider">Support</h4>
-            <ul className="space-y-4">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
-                  <Link to={link.path} className="text-gray-200 hover:text-brand-50 transition-colors text-sm font-medium">{link.name}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          
+          {/* Links */}
+          {Object.entries(footerLinks).map(([group, links]) => (
+            <div key={group}>
+              <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-6">
+                {group}
+              </h4>
+              <ul className="space-y-3.5">
+                {links.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      to={link.path}
+                      className="text-gray-400 hover:text-white transition-colors text-sm font-medium"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-200 gap-4">
-          <p className="text-gray-200 text-xs font-medium">
-            &copy; {new Date().getFullYear()} Ethio-Med. All rights reserved. Verified by Ministry of Health.
+        <div className="flex flex-col md:flex-row items-center justify-between py-6 border-t border-white/10 gap-4">
+          <p className="text-gray-500 text-xs">
+            &copy; {new Date().getFullYear()} Med Finder Ethiopia. All rights reserved.
           </p>
-          <div className="flex flex-wrap justify-center gap-6 text-gray-200 text-xs font-medium">
-            <span className="flex items-center gap-1.5"><MapPin size={14} className="text-gray-200" /> Addis Ababa, ET</span>
-            <span className="flex items-center gap-1.5"><Phone size={14} className="text-gray-200" /> +251 900 000 000</span>
-          </div>
+          <p className="text-gray-600 text-xs">
+            Verified by the Ethiopian Ministry of Health
+          </p>
         </div>
       </div>
     </footer>

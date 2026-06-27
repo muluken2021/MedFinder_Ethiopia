@@ -1,32 +1,26 @@
-import React, { useState } from 'react'
-
-import { useTheme } from '../context/ThemeContext'  // ✅ import theme hook
-import FindPharmacy from '../components/FindPharmacy'
-
-import Hero from '../components/Hero'
-import FeaturedPharmacies from '../components/FeaturedPharmacies'
-import TestimonialCarousel from '../components/TestimonialCarousel'
-import KeyFeatures from '../components/KeyFeatures'
-
+import React from 'react';
+import Hero from '../components/Hero';
+import FindPharmacy from '../components/FindPharmacy';
+import FeaturedPharmacies from '../components/FeaturedPharmacies';
+import KeyFeatures from '../components/KeyFeatures';
+import TestimonialCarousel from '../components/TestimonialCarousel';
+import FAQSection from '../components/FAQSection';
+import CTABanner from '../components/CTABanner';
+import Stat from '../components/Stat';
 
 const Home = () => {
-  
-  const { theme } = useTheme()  // ✅ access theme colors
-
-
   return (
     <>
-
-     <Hero />
+      <Hero />
       <FindPharmacy />
       <FeaturedPharmacies />
       <KeyFeatures />
+      <Stat />
       <TestimonialCarousel />
-
+      <FAQSection />
+      <CTABanner />
     </>
-  )
-}
+  );
+};
 
-export default Home
-
-
+export default Home;
